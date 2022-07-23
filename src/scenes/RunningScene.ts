@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import {
   Scene, DirectionalLight, AmbientLight, Object3D, AnimationMixer, AnimationAction, Clock, Box3, LoopOnce,
 } from 'three';
@@ -37,6 +38,12 @@ export default class RunningScene extends Scene {
 
   private jumpingDown!: Tween<any>;
 
+  private isSliding = false;
+
+  private slidingAnimation !: AnimationAction;
+
+  private sliderTimeout!: ReturnType<typeof setTimeout>;
+
   async load() {
     const ambient = new AmbientLight(0xFFFFFF, 2.5);
     this.add(ambient);
@@ -75,6 +82,11 @@ export default class RunningScene extends Scene {
     const jumpingAnimationObject = await this.fbxLoader.loadAsync('./assets/animations/xbot@jumping.fbx');
 
     this.jumpingAnimation = this.animationMixer.clipAction(jumpingAnimationObject.animations[0]);
+
+    const slidingAnimationObject = await this.fbxLoader.loadAsync('./assets/animations/xbot@sliding.fbx');
+    // remove the animation track that makes the player move forward when sliding
+    slidingAnimationObject.animations[0].tracks.shift();
+    this.slidingAnimation = this.animationMixer.clipAction(slidingAnimationObject.animations[0]);
   }
 
   initialize() {
@@ -86,6 +98,9 @@ export default class RunningScene extends Scene {
       }
       if (e.key === 'ArrowUp') {
         this.jump();
+      }
+      if (e.key === 'ArrowDown') {
+        this.slide();
       }
     };
   }
@@ -150,6 +165,11 @@ export default class RunningScene extends Scene {
 
   private jump() {
     if (!this.isJumping) {
+      if (this.isSliding) {
+        clearTimeout(this.sliderTimeout);
+        this.player.position.y = -35;
+        this.isSliding = false;
+      }
       this.isJumping = true;
       this.currentAnimation.stop();
 
@@ -172,6 +192,30 @@ export default class RunningScene extends Scene {
         this.isJumping = false;
         this.player.position.y = -35;
       });
+    }
+  }
+
+  private slide() {
+    if (!this.isSliding) {
+      if (this.isJumping) {
+        this.jumpingUp.stop();
+        this.jumpingDown.stop();
+        this.player.position.y = -35;
+        this.isJumping = false;
+      }
+      this.isSliding = true;
+      this.player.position.y -= 5;
+      this.currentAnimation.stop();
+      this.slidingAnimation.reset();
+      this.currentAnimation = this.slidingAnimation;
+      this.slidingAnimation.clampWhenFinished = true;
+      this.slidingAnimation.play();
+      this.slidingAnimation.crossFadeTo(this.runningAnimation, 1.9, false).play();
+      this.currentAnimation = this.runningAnimation;
+      this.sliderTimeout = setTimeout(() => {
+        this.player.position.y = -35;
+        this.isSliding = false;
+      }, 800);
     }
   }
 }
