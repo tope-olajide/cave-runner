@@ -34,6 +34,7 @@ const render = () => {
 
 const main = async () => {
   await runningScene.load();
+  (document.querySelector('.loading-container') as HTMLInputElement).style.display = 'none';
   runningScene.initialize();
   render();
 };
