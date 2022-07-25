@@ -276,7 +276,39 @@ export default class RunningScene extends Scene {
   }
 
   hide() {
+    this.isGameOver = false;
+    this.isGamePaused = false;
 
+    TWEEN.removeAll();
+
+    this.coins = 0;
+
+    this.scores = 0;
+
+    (document.getElementById('game-paused-modal') as HTMLInputElement).style.display = 'none';
+
+    (document.querySelector('.scores-container') as HTMLInputElement).style.display = 'none';
+
+    (document.querySelector('.coins-container') as HTMLInputElement).style.display = 'none';
+
+    (document.querySelector('.pause-button') as HTMLInputElement).style.display = 'none';
+
+    this.runningAnimation.reset();
+    this.currentAnimation.reset();
+
+    this.visible = false;
+    this.currentObstacleOne.position.z = -1200;
+    this.currentObstacleTwo.position.z = -1500;
+
+    this.activeCoinsGroup.position.z = -1200;
+
+    this.currentAnimation.crossFadeTo(this.runningAnimation, 1, false).play();
+
+    this.player.position.z = -110;
+    this.player.position.x = 0;
+    this.currentAnimation = this.runningAnimation;
+
+    this.clock.stop();
   }
 
   private gameOver() {
