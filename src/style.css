@@ -112,3 +112,15 @@ margin: 5px;
   position: absolute;
   display: none;
 }
+
+.loading-container{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loading-container img{
+  width: 200px;
+}
