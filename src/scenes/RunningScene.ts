@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 import {
   Scene, DirectionalLight, AmbientLight, Object3D, AnimationMixer, AnimationAction, Clock,
-  Box3, Group, BoxGeometry, MeshPhongMaterial, Mesh, Vector3
+  Box3, Group, BoxGeometry, MeshPhongMaterial, Mesh, Vector3,
 } from 'three';
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
@@ -64,6 +64,34 @@ export default class RunningScene extends Scene {
   private obstacleBox = new Box3(new Vector3(), new Vector3());
 
   private obstacleBox2 = new Box3(new Vector3(), new Vector3());
+
+  private coinObject = new Object3D();
+
+  private coinsArray: Group[] = [];
+
+  private activeCoinsGroup = new Group();
+
+  private coinBox = new Box3(new Vector3(), new Vector3());
+
+  private scores = 0;
+
+  private coins = 0;
+
+  private isGamePaused = false;
+
+  private isGameOver = false;
+
+  private stumbleAnimation!: AnimationAction;
+
+  private isPlayerHeadStart = false;
+
+  private touchstartX = 0;
+
+  private touchendX = 0;
+
+  private touchstartY = 0;
+
+  private touchendY = 0;
 
   async load() {
     const ambient = new AmbientLight(0xFFFFFF, 2.5);
@@ -138,22 +166,77 @@ export default class RunningScene extends Scene {
     this.playerBox.scale.set(50, 200, 20);
     this.playerBox.position.set(0, 90, 0);
     this.player.add(this.playerBox);
+    this.playerBox.visible = false;
+
+    this.coinObject = await this.fbxLoader.loadAsync('../../assets/models/coin.fbx');
+    this.coinObject.rotation.set(90 * (Math.PI / 180), 0, 150 * (Math.PI / 180));
+
+    this.generateLeftCenterRightCoins();
+
+    this.generateLeftSideCoin();
+
+    this.generateLeftandCenterCoins();
+
+    this.generateCenterRightCoins();
+
+    this.generateRightCoins();
+
+    const stumblingAnimationObject = await this.fbxLoader.loadAsync('../../assets/animations/xbot@stumbling.fbx');
+    this.stumbleAnimation = this.animationMixer.clipAction(stumblingAnimationObject.animations[0]);
+
+    const gestureZone = (document.getElementById('app') as HTMLInputElement);
+    if (!this.isGameOver && !this.isGamePaused) {
+      gestureZone.addEventListener('touchstart', (event) => {
+        this.touchstartX = event.changedTouches[0].screenX;
+        this.touchstartY = event.changedTouches[0].screenY;
+      }, false);
+
+      gestureZone.addEventListener('touchend', (event) => {
+        this.touchendX = event.changedTouches[0].screenX;
+        this.touchendY = event.changedTouches[0].screenY;
+        this.handleTouch();
+      }, false);
+    }
   }
 
   initialize() {
     document.onkeydown = (e) => {
-      if (e.key === 'ArrowLeft') {
-        this.moveLeft();
-      } if (e.key === 'ArrowRight') {
-        this.moveRight();
-      }
-      if (e.key === 'ArrowUp') {
-        this.jump();
-      }
-      if (e.key === 'ArrowDown') {
-        this.slide();
+      if (!this.isGameOver && !this.isGamePaused) {
+        if (e.key === 'ArrowLeft') {
+          this.moveLeft();
+        } if (e.key === 'ArrowRight') {
+          this.moveRight();
+        }
+        if (e.key === 'ArrowUp') {
+          this.jump();
+        }
+        if (e.key === 'ArrowDown') {
+          this.slide();
+        }
+        if (e.key === ' ') {
+          this.pauseAndResumeGame();
+        }
       }
     };
+    (document.querySelector('.scores-container') as HTMLInputElement).style.display = 'block';
+
+    (document.querySelector('.coins-container') as HTMLInputElement).style.display = 'block';
+
+    (document.querySelector('.pause-button') as HTMLInputElement).style.display = 'block';
+
+    (document.querySelector('.pause-button') as HTMLInputElement).onclick = () => {
+      this.pauseAndResumeGame();
+    };
+
+    (document.getElementById('resume-button') as HTMLInputElement).onclick = () => {
+      this.pauseAndResumeGame();
+    };
+    (document.getElementById('restart-button') as HTMLInputElement).onclick = () => {
+      this.restartGame();
+    };
+    setTimeout(() => {
+      this.isPlayerHeadStart = true;
+    }, 3000);
   }
 
   update() {
@@ -173,11 +256,23 @@ export default class RunningScene extends Scene {
     }
     TWEEN.update();
 
-    this.spawnObstacle();
-
     this.playerBoxCollider.setFromObject(this.playerBox);
 
+    this.detectCollisionWithCoins();
+
     this.detectCollisionWithObstacles();
+
+    this.scores += Math.round(this.speed * this.delta);
+    (document.querySelector('.scores-count') as HTMLInputElement).innerHTML = this.scores.toString();
+
+    if (this.isPlayerHeadStart) {
+      this.spawnObstacle();
+      this.spawnCoin();
+    }
+
+    if (!this.isGameOver && this.speed < 400 && !this.isGamePaused) {
+      this.speed += 0.06;
+    }
   }
 
   hide() {
@@ -185,12 +280,52 @@ export default class RunningScene extends Scene {
   }
 
   private gameOver() {
-    console.log('game over');
+    this.isGameOver = true;
+    this.speed = 0;
+    (document.querySelector('.pause-button') as HTMLInputElement).style.display = 'none';
+    setTimeout(() => {
+      this.clock.stop();
+      (document.getElementById('game-over-modal') as HTMLInputElement).style.display = 'block';
+      (document.querySelector('#current-score') as HTMLInputElement).innerHTML = this.scores.toString();
+      (document.querySelector('#current-coins') as HTMLInputElement).innerHTML = this.coins.toString();
+    }, 3000);
+    this.stumbleAnimation.reset();
+    this.stumbleAnimation.setLoop(1, 1);
+    this.stumbleAnimation.clampWhenFinished = true;
+
+    this.currentAnimation.crossFadeTo(this.stumbleAnimation, 0.1, false).play();
+    this.currentAnimation = this.stumbleAnimation;
+    this.currentObstacleOne.position.z -= 5;
+    this.currentObstacleTwo.position.z -= 5;
+    this.isPlayerHeadStart = false;
+    (document.querySelector('.disable-touch') as HTMLInputElement).style.display = 'block';
+  }
+
+  private restartGame() {
+    (document.getElementById('game-over-modal') as HTMLInputElement).style.display = 'none';
+    this.currentObstacleOne.position.z = -1200;
+    this.currentObstacleTwo.position.z = -1500;
+    this.activeCoinsGroup.position.z = -1800;
+    this.clock.start();
+    this.speed = 220;
+    this.coins = 0;
+    this.scores = 0;
+    (document.querySelector('.coins-count') as HTMLInputElement).innerHTML = '0';
+    this.runningAnimation.reset();
+    this.currentAnimation.crossFadeTo(this.runningAnimation, 0, false).play();
+    this.player.position.z = -110;
+    this.isGameOver = false;
+    this.isGamePaused = false;
+    this.currentAnimation = this.runningAnimation;
+    (document.querySelector('.pause-button') as HTMLInputElement).style.display = 'block';
+    this.player.position.x = 0;
+    setTimeout(() => {
+      this.isPlayerHeadStart = true;
+    }, 3000);
+    (document.querySelector('.disable-touch') as HTMLInputElement).style.display = 'none';
   }
 
   private detectCollisionWithObstacles() {
-   //  this.playerBoxCollider.setFromObject(this.playerBox);
-
     for (let i = 0; i < this.currentObstacleOne.children.length; i += 1) {
       this.obstacleBox.setFromObject(this.currentObstacleOne.children[i]);
       if (this.playerBoxCollider.intersectsBox(this.obstacleBox)) {
@@ -251,7 +386,6 @@ export default class RunningScene extends Scene {
       }
       this.isJumping = true;
       this.currentAnimation.stop();
-
       this.currentAnimation = this.jumpingAnimation;
       this.currentAnimation.reset();
       this.currentAnimation.setLoop(1, 1);
@@ -333,6 +467,104 @@ export default class RunningScene extends Scene {
       this.currentObstacleTwo = this.createRandomObstacle();
     }
   }
+
+  private detectCollisionWithCoins() {
+    for (let i = 0; i < this.activeCoinsGroup.children.length; i += 1) {
+      this.coinBox.setFromObject(this.activeCoinsGroup.children[i]);
+      if (this.playerBoxCollider.intersectsBox(this.coinBox)) {
+        this.activeCoinsGroup.children[i].visible = false;
+        this.activeCoinsGroup.children[i].position.z += 70;
+        if (!this.isGamePaused && !this.isGameOver) {
+          this.coins += 1;
+        }
+        (document.querySelector('.coins-count') as HTMLInputElement).innerHTML = `${this.coins}`;
+        setTimeout(() => {
+          this.activeCoinsGroup.children[i].position.z -= 70;
+        }, 100);
+      }
+    }
+  }
+
+  private generateRandomCoins() {
+    const randNum = Math.floor(Math.random() * this.coinsArray.length);
+    this.activeCoinsGroup = this.coinsArray[randNum];
+  }
+
+  private spawnCoin() {
+    if (!this.activeCoinsGroup.visible) {
+      this.activeCoinsGroup.visible = true;
+    }
+
+    this.activeCoinsGroup.position.z += 0.8 * this.speed * this.delta;
+    if (this.activeCoinsGroup.position.z > 50) {
+      for (let i = 0; i < this.activeCoinsGroup.children.length; i += 1) {
+        if (!this.activeCoinsGroup.children[i].visible) {
+          this.activeCoinsGroup.children[i].visible = true;
+        }
+      }
+      this.activeCoinsGroup.visible = false;
+      this.activeCoinsGroup.position.z = -1200;
+      this.generateRandomCoins();
+    }
+  }
+
+  private pauseAndResumeGame() {
+    if (!this.isGamePaused) {
+      this.clock.stop();
+      (document.getElementById('game-paused-modal') as HTMLInputElement).style.display = 'block';
+      this.isGamePaused = true;
+    } else {
+      this.clock.start();
+      (document.getElementById('game-paused-modal') as HTMLInputElement).style.display = 'none';
+      this.isGamePaused = false;
+    }
+    this.saveCoins();
+    this.saveHighScore();
+  }
+
+  private saveHighScore() {
+    const highScore = localStorage.getItem('high-score') || 0;
+    if (Number(this.scores) > Number(highScore)) {
+      localStorage.setItem('high-score', this.scores.toString());
+    }
+  }
+
+  private saveCoins() {
+    const prevTotalCoins = localStorage.getItem('total-coins') || 0;
+    const totalCoins = Number(prevTotalCoins) + this.coins;
+    localStorage.setItem('coins', totalCoins.toString());
+  }
+
+  /*
+The implementation of handleTouch Method is based on Smmehrab answer on stackoverflow
+Link: https://stackoverflow.com/a/62825217
+  */
+
+  private handleTouch = () => {
+    const pageWidth = window.innerWidth || document.body.clientWidth;
+    const treshold = Math.max(1, Math.floor(0.01 * (pageWidth)));
+    const limit = Math.tan(45 * (1.5 / 180) * Math.PI);
+    const x = this.touchendX - this.touchstartX;
+    const y = this.touchendY - this.touchstartY;
+    const xy = Math.abs(x / y);
+    const yx = Math.abs(y / x);
+    if (Math.abs(x) > treshold || Math.abs(y) > treshold) {
+      if (yx <= limit) {
+        if (x < 0) {
+          this.moveLeft();
+        } else {
+          this.moveRight();
+        }
+      }
+      if (xy <= limit) {
+        if (y < 0) {
+          this.jump();
+        } else {
+          this.slide();
+        }
+      }
+    }
+  };
 
   private createLeftJumpObstacle() {
     const meshGroup = new Group();
@@ -534,5 +766,87 @@ export default class RunningScene extends Scene {
     this.add(meshGroup);
     meshGroup.visible = false;
     this.obstacleArray.push(meshGroup);
+  }
+
+  private generateLeftCenterRightCoins() {
+    const coinsGroup = new Group();
+    for (let i = 0; i < 5; i += 1) {
+      const leftCoin = this.coinObject.clone();
+      const centerCoin = this.coinObject.clone();
+      const rightCoin = this.coinObject.clone();
+      leftCoin.position.set(-18, -12, -i * 20);
+      centerCoin.position.set(0, -12, -i * 20);
+      rightCoin.position.set(18, -12, -i * 20);
+      leftCoin.scale.set(0.035, 0.035, 0.035);
+      centerCoin.scale.set(0.035, 0.035, 0.035);
+      rightCoin.scale.set(0.035, 0.035, 0.035);
+      coinsGroup.add(leftCoin, centerCoin, rightCoin);
+    }
+    coinsGroup.position.set(0, -20, -1200);
+    this.add(coinsGroup);
+    coinsGroup.visible = false;
+    this.coinsArray.push(coinsGroup);
+  }
+
+  private generateLeftSideCoin() {
+    const coinsGroup = new Group();
+    for (let i = 0; i < 5; i += 1) {
+      const leftCoin = this.coinObject.clone();
+      leftCoin.position.set(-18, -12, -i * 20);
+      leftCoin.scale.set(0.035, 0.035, 0.035);
+      coinsGroup.add(leftCoin);
+    }
+    coinsGroup.position.set(0, -20, -1200);
+    this.add(coinsGroup);
+    coinsGroup.visible = false;
+    this.coinsArray.push(coinsGroup);
+  }
+
+  private generateLeftandCenterCoins() {
+    const coinsGroup = new Group();
+    for (let i = 0; i < 5; i += 1) {
+      const leftCoin = this.coinObject.clone();
+      const centerCoin = this.coinObject.clone();
+      leftCoin.position.set(-18, -12, -i * 20);
+      centerCoin.position.set(0, -12, -i * 20);
+      leftCoin.scale.set(0.035, 0.035, 0.035);
+      centerCoin.scale.set(0.035, 0.035, 0.035);
+      coinsGroup.add(leftCoin, centerCoin);
+    }
+    coinsGroup.position.set(0, -20, -1200);
+    this.add(coinsGroup);
+    coinsGroup.visible = false;
+    this.coinsArray.push(coinsGroup);
+  }
+
+  private generateCenterRightCoins() {
+    const coinsGroup = new Group();
+    for (let i = 0; i < 5; i += 1) {
+      const centerCoin = this.coinObject.clone();
+      const rightCoin = this.coinObject.clone();
+      centerCoin.position.set(0, -12, -i * 20);
+      rightCoin.position.set(18, -12, -i * 20);
+      coinsGroup.add(centerCoin, rightCoin);
+      centerCoin.scale.set(0.035, 0.035, 0.035);
+      rightCoin.scale.set(0.035, 0.035, 0.035);
+    }
+    coinsGroup.position.set(0, -20, -1200);
+    this.add(coinsGroup);
+    coinsGroup.visible = false;
+    this.coinsArray.push(coinsGroup);
+  }
+
+  private generateRightCoins() {
+    const coinsGroup = new Group();
+    for (let i = 0; i < 5; i += 1) {
+      const rightCoin = this.coinObject.clone();
+      rightCoin.position.set(18, -12, -i * 20);
+      coinsGroup.add(rightCoin);
+      rightCoin.scale.set(0.035, 0.035, 0.035);
+    }
+    coinsGroup.position.set(0, -20, -1200);
+    this.add(coinsGroup);
+    coinsGroup.visible = false;
+    this.coinsArray.push(coinsGroup);
   }
 }
