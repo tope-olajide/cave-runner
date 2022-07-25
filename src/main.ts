@@ -1,37 +1,41 @@
-import {
-  WebGLRenderer, PerspectiveCamera, Scene, BoxGeometry, MeshPhongMaterial, Mesh, DirectionalLight,
-} from 'three';
+import { WebGLRenderer, PerspectiveCamera } from 'three';
+
+import RunningScene from './scenes/RunningScene';
 
 const width = window.innerWidth;
 const height = window.innerHeight;
 
 const renderer = new WebGLRenderer({
   canvas: document.getElementById('app') as HTMLCanvasElement,
+  antialias: true,
+  precision: 'mediump',
 });
+
 renderer.setSize(width, height);
 
 const mainCamera = new PerspectiveCamera(60, width / height, 0.1, 1000);
 
-const scene = new Scene();
+function onWindowResize() {
+  mainCamera.aspect = window.innerWidth / window.innerHeight;
+  mainCamera.updateProjectionMatrix();
 
-const geometry = new BoxGeometry();
-const material = new MeshPhongMaterial({ color: 0x0000ff });
-const cube = new Mesh(geometry, material);
-cube.position.set(0, 0, -5);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
 
-scene.add(cube);
+window.addEventListener('resize', onWindowResize);
 
-const rotateCube = () => {
-  cube.rotation.y -= 0.03;
-  cube.rotation.z -= 0.01;
-};
-const light = new DirectionalLight(0xFFFFFF, 1);
-light.position.set(0, 0, 2);
-scene.add(light);
+const runningScene = new RunningScene();
 
 const render = () => {
-  rotateCube();
-  renderer.render(scene, mainCamera);
+  runningScene.update();
+  renderer.render(runningScene, mainCamera);
   requestAnimationFrame(render);
 };
-render();
+
+const main = async () => {
+  await runningScene.load();
+  runningScene.initialize();
+  render();
+};
+
+main();
