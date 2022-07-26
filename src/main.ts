@@ -50,6 +50,11 @@ const switchToMainMenuScene = () => {
   switchToMainMenuScene();
 };
 
+(document.querySelector('#game-over-quit-button')as HTMLInputElement).onclick = () => {
+  (document.getElementById('game-over-modal')as HTMLInputElement).style.display = 'none';
+  switchToMainMenuScene();
+};
+
 currentScene = mainMenuScene;
 const render = () => {
   currentScene.update();
