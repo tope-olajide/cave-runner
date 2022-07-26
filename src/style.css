@@ -34,7 +34,7 @@ html, body {
 .scores-container h3 {
 margin:.5rem;
 }
-.pause-button {
+.pause-button, .home-menu {
   position: absolute;
   left: 0;
   top: 0;
@@ -65,7 +65,7 @@ margin:.5rem;
   color: #2C0604;
 }
 
-.btn, .btn-icon-only {
+.btn, .btn-icon-only, .btn-two {
 background-color: #2C0604;
 border: none;
 color: #BA4D31;
@@ -74,7 +74,9 @@ font-size: 16px;
 cursor: pointer;
 margin: 5px;
 }
-
+.btn-two {
+  padding: 12px 0 12px 12px;
+}
 .btn-icon-only {
   padding: 0px;
   color:#F2E205;
@@ -139,4 +141,39 @@ margin: 5px;
 }
 #main-menu-buttons button {
   margin-bottom: 20px;
+}
+
+#character-price-button {
+  display: none;
+}
+
+.character-selection-buttons {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: none;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-bottom: 20px;
+  align-items: center;
+  display: flex;
+}
+
+.character-name {
+  text-align: center;
+  color: #F2E205;
+  font-size: 1.5rem;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  margin-bottom: 80px;
+  display: block;
+}
+
+#character-price-button {
+  display: none;
+}
+
+#character-selection-container {
+  display: none;
 }
