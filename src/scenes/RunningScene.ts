@@ -261,7 +261,7 @@ export default class RunningScene extends Scene {
       .slideAnimation);
     this.peasantGirlStumbleAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[2]
       .stumbleAnimation);
-    this.peasantGirlStumbleAnimation.animations[0].tracks.shift();
+    this.peasantGirlSlidingAnimation.animations[0].tracks.shift();
 
     this.xbot.visible = false;
     this.jolleen.visible = false;
@@ -269,9 +269,9 @@ export default class RunningScene extends Scene {
 
     this.charactersContainer.push(this.xbot, this.jolleen, this.peasantGirl);
 
-    this.add(this.charactersContainer[0]);
-    this.add(this.charactersContainer[1]);
-    this.add(this.charactersContainer[2]);
+    this.add(this.xbot);
+    this.add(this.jolleen);
+    this.add(this.peasantGirl);
 
     this.runningAnimationsContainer.push(
       this.xbotRunningAnimation,
