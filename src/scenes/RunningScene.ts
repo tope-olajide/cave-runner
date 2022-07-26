@@ -237,6 +237,18 @@ export default class RunningScene extends Scene {
     setTimeout(() => {
       this.isPlayerHeadStart = true;
     }, 3000);
+    if (!this.visible) {
+      this.visible = true;
+    }
+
+    if (!this.clock.running) {
+      this.currentAnimation = this.runningAnimation;
+      this.currentAnimation.reset();
+      this.currentAnimation.play();
+      this.clock.start();
+      this.speed = 220;
+      this.player.position.x = 0;
+    }
   }
 
   update() {
@@ -276,10 +288,9 @@ export default class RunningScene extends Scene {
   }
 
   hide() {
-    this.isGameOver = false;
-    this.isGamePaused = false;
+    (document.querySelector('.disable-touch') as HTMLInputElement).style.display = 'none';
 
-    TWEEN.removeAll();
+    this.isGameOver = false;
 
     this.coins = 0;
 
@@ -293,22 +304,16 @@ export default class RunningScene extends Scene {
 
     (document.querySelector('.pause-button') as HTMLInputElement).style.display = 'none';
 
-    this.runningAnimation.reset();
-    this.currentAnimation.reset();
-
     this.visible = false;
+
     this.currentObstacleOne.position.z = -1200;
     this.currentObstacleTwo.position.z = -1500;
 
     this.activeCoinsGroup.position.z = -1200;
-
-    this.currentAnimation.crossFadeTo(this.runningAnimation, 1, false).play();
-
-    this.player.position.z = -110;
-    this.player.position.x = 0;
-    this.currentAnimation = this.runningAnimation;
+    this.currentAnimation.stop();
 
     this.clock.stop();
+    console.log('hide');
   }
 
   private gameOver() {
