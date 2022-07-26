@@ -5,20 +5,57 @@ import {
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
+import allCharacters from '../allCharacters';
+
+interface IallGameCharacters {
+    name: string
+    model: string
+    isActive: boolean
+    price: number
+    isLocked: boolean
+    danceAnimation: string
+    runAnimation: string
+    slideAnimation: string
+    stumbleAnimation: string
+    jumpAnimation: string
+}
+
 export default class MainMenuScene extends Scene {
   private fbxLoader = new FBXLoader();
 
   private woodenCave = new Object3D();
 
-  private player = new Object3D();
-
   private delta = 0;
 
   private clock = new Clock();
 
-  private AnimationMixer!: AnimationMixer;
+  private animationMixer!: AnimationMixer;
 
   private dancingAnimation!: AnimationAction;
+
+  private xbot = new Object3D();
+
+  private jolleen = new Object3D();
+
+  private peasantGirl = new Object3D();
+
+  private xbotAnimation!: Object3D;
+
+  private jolleenAnimation!: Object3D;
+
+  private peasantGirlAnimation!: Object3D;
+
+  private charactersContainer: Object3D[] = [];
+
+  private animationsContainer: Object3D[] = [];
+
+  private allGameCharacters: IallGameCharacters[] = [];
+
+  private activeCharacter = new Object3D();
+
+  private activeCharacterAnimation!: Object3D;
+
+  private activeIndexNumber = 0;
 
   async load() {
     this.woodenCave = await this.fbxLoader.loadAsync('./assets/models/wooden-cave.fbx');
@@ -34,17 +71,43 @@ export default class MainMenuScene extends Scene {
     light.position.set(0, 40, -10);
     this.add(light);
 
-    this.player = await this.fbxLoader.loadAsync('../../assets/characters/xbot.fbx');
-    this.player.position.z = -110;
-    this.player.position.y = -35;
-    this.player.scale.set(0.1, 0.1, 0.1);
-    this.player.rotation.y = 180 * (Math.PI / 180);
-    this.add(this.player);
+    if (!JSON.parse(localStorage.getItem('allGameCharacters')!)) {
+      localStorage.setItem('allGameCharacters', JSON.stringify(allCharacters));
+    }
 
-    const dancingAnimationObject = await this.fbxLoader.loadAsync('../../assets/animations/xbot@dancing.fbx');
-    this.AnimationMixer = new AnimationMixer(this.player);
-    this.dancingAnimation = this.AnimationMixer.clipAction(dancingAnimationObject.animations[0]);
-    this.dancingAnimation.play();
+    this.allGameCharacters = (JSON.parse(localStorage.getItem('allGameCharacters')!));
+
+    this.xbot = await this.fbxLoader.loadAsync(this.allGameCharacters[0].model);
+    this.jolleen = await this.fbxLoader.loadAsync(this.allGameCharacters[1].model);
+    this.peasantGirl = await this.fbxLoader.loadAsync(this.allGameCharacters[2].model);
+
+    this.xbotAnimation = await this.fbxLoader
+      .loadAsync(this.allGameCharacters[0].danceAnimation);
+    this.jolleenAnimation = await this.fbxLoader
+      .loadAsync(this.allGameCharacters[1].danceAnimation);
+    this.peasantGirlAnimation = await this.fbxLoader
+      .loadAsync(this.allGameCharacters[2].danceAnimation);
+
+    this.xbot.visible = false;
+    this.jolleen.visible = false;
+    this.peasantGirl.visible = false;
+
+    this.charactersContainer.push(
+      this.xbot,
+      this.jolleen,
+      this.peasantGirl,
+    );
+    this.animationsContainer.push(
+      this.xbotAnimation,
+      this.jolleenAnimation,
+      this.peasantGirlAnimation,
+    );
+
+    this.add(this.xbot);
+    this.add(this.jolleen);
+    this.add(this.peasantGirl);
+
+    this.hide();
   }
 
   initialize() {
@@ -61,12 +124,26 @@ export default class MainMenuScene extends Scene {
     if (!this.clock.running) {
       this.clock.start();
     }
+
+    this.allGameCharacters = (JSON.parse(localStorage.getItem('allGameCharacters')!));
+    this.activeIndexNumber = this.allGameCharacters
+      .findIndex((character) => character.isActive === true);
+
+    this.activeCharacter = this.charactersContainer[this.activeIndexNumber];
+    this.activeCharacterAnimation = this.animationsContainer[this.activeIndexNumber];
+    this.activeCharacter.scale.set(0.1, 0.1, 0.1);
+    this.activeCharacter.position.set(0, -35, -110);
+    this.activeCharacter.visible = true;
+    this.animationMixer = new AnimationMixer(this.activeCharacter);
+    this.dancingAnimation = this.animationMixer
+      .clipAction(this.activeCharacterAnimation.animations[0]);
+    this.dancingAnimation.play();
   }
 
   update() {
-    if (this.AnimationMixer) {
+    if (this.animationMixer) {
       this.delta = this.clock.getDelta();
-      this.AnimationMixer.update(this.delta);
+      this.animationMixer.update(this.delta);
     }
   }
 
@@ -76,5 +153,6 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('#main-menu-buttons') as HTMLInputElement).style.display = 'none';
     (document.querySelector('.high-score-container') as HTMLInputElement).style.display = 'none';
     (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'none';
+    this.activeCharacter.visible = false;
   }
 }
