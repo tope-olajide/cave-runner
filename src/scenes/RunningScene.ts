@@ -9,6 +9,19 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 import allCharacters from '../allCharacters';
 
+interface IallGameCharacters {
+  name: string
+  model: string
+  isActive: boolean
+  price: number
+  isLocked: boolean
+  danceAnimation: string
+  runAnimation: string
+  slideAnimation: string
+  stumbleAnimation: string
+  jumpAnimation: string
+}
+
 export default class RunningScene extends Scene {
   private fbxLoader = new FBXLoader();
 
@@ -152,35 +165,11 @@ export default class RunningScene extends Scene {
     this.woodenCave.scale.set(0.055, 0.055, 0.055);
     this.add(this.woodenCave);
 
-    this.player = await this.fbxLoader.loadAsync('../../assets/characters/xbot.fbx');
-    this.player.position.z = -110;
-    this.player.position.y = -35;
-    this.player.scale.set(0.1, 0.1, 0.1);
-    this.player.rotation.y = 180 * (Math.PI / 180);
-    this.add(this.player);
-
-    const runningAnimationObject = await this.fbxLoader.loadAsync('./assets/animations/xbot@running.fbx');
-
-    this.animationMixer = new AnimationMixer(this.player);
-    this.runningAnimation = this.animationMixer.clipAction(runningAnimationObject.animations[0]);
-    this.runningAnimation.play();
-
     this.woodenCaveClone = this.woodenCave.clone();
     const caveBox = new Box3().setFromObject(this.woodenCave);
     this.caveSize = caveBox.max.z - caveBox.min.z - 1;
     this.woodenCaveClone.position.z = this.woodenCave.position.z + this.caveSize;
     this.add(this.woodenCaveClone);
-
-    this.currentAnimation = this.runningAnimation;
-
-    const jumpingAnimationObject = await this.fbxLoader.loadAsync('./assets/animations/xbot@jumping.fbx');
-
-    this.jumpingAnimation = this.animationMixer.clipAction(jumpingAnimationObject.animations[0]);
-
-    const slidingAnimationObject = await this.fbxLoader.loadAsync('./assets/animations/xbot@sliding.fbx');
-    // remove the animation track that makes the player move forward when sliding
-    slidingAnimationObject.animations[0].tracks.shift();
-    this.slidingAnimation = this.animationMixer.clipAction(slidingAnimationObject.animations[0]);
 
     this.barrelObject = await this.fbxLoader.loadAsync('../../assets/models/barrel.fbx');
     this.boxObject = await this.fbxLoader.loadAsync('../../assets/models/box.fbx');
@@ -208,11 +197,6 @@ export default class RunningScene extends Scene {
 
     this.createRightSlideObstacle();
 
-    this.playerBox.scale.set(50, 200, 20);
-    this.playerBox.position.set(0, 90, 0);
-    this.player.add(this.playerBox);
-    this.playerBox.visible = false;
-
     this.coinObject = await this.fbxLoader.loadAsync('../../assets/models/coin.fbx');
     this.coinObject.rotation.set(90 * (Math.PI / 180), 0, 150 * (Math.PI / 180));
 
@@ -225,9 +209,6 @@ export default class RunningScene extends Scene {
     this.generateCenterRightCoins();
 
     this.generateRightCoins();
-
-    const stumblingAnimationObject = await this.fbxLoader.loadAsync('../../assets/animations/xbot@stumbling.fbx');
-    this.stumbleAnimation = this.animationMixer.clipAction(stumblingAnimationObject.animations[0]);
 
     const gestureZone = (document.getElementById('app') as HTMLInputElement);
     if (!this.isGameOver && !this.isGamePaused) {
@@ -315,6 +296,42 @@ export default class RunningScene extends Scene {
   }
 
   initialize() {
+    this.allGameCharacters = (JSON.parse(localStorage.getItem('allGameCharacters')!));
+
+    this.activePlayerIndex = this.allGameCharacters
+      .findIndex((character) => character.isActive === true);
+
+    this.player = this.charactersContainer[this.activePlayerIndex];
+    this.player.position.z = -110;
+    this.player.position.y = -35;
+    this.player.position.x = 0;
+    this.player.scale.set(0.1, 0.1, 0.1);
+    this.player.rotation.y = 180 * (Math.PI / 180);
+    this.player.visible = true;
+
+    this.playerBox.visible = false;
+    this.playerBox.scale.set(50, 200, 20);
+    this.playerBox.position.set(0, 90, 0);
+    this.player.add(this.playerBox);
+
+    this.animationMixer = new AnimationMixer(this.player);
+
+    const runningAnimationObject = this.runningAnimationsContainer[this.activePlayerIndex];
+
+    this.runningAnimation = this.animationMixer.clipAction(runningAnimationObject.animations[0]);
+    this.currentAnimation = this.runningAnimation;
+    this.currentAnimation.reset();
+    this.currentAnimation.play();
+
+    const jumpingAnimationObject = this.jumpingAnimationsContainer[this.activePlayerIndex];
+    this.jumpingAnimation = this.animationMixer.clipAction(jumpingAnimationObject.animations[0]);
+
+    const slidingAnimationObject = this.slidingAnimationsContainer[this.activePlayerIndex];
+    this.slidingAnimation = this.animationMixer.clipAction(slidingAnimationObject.animations[0]);
+
+    const stumblingAnimationObject = this.stumbleAnimationsContainer[this.activePlayerIndex];
+    this.stumbleAnimation = this.animationMixer.clipAction(stumblingAnimationObject.animations[0]);
+
     document.onkeydown = (e) => {
       if (!this.isGameOver && !this.isGamePaused) {
         if (e.key === 'ArrowLeft') {
@@ -352,14 +369,15 @@ export default class RunningScene extends Scene {
     setTimeout(() => {
       this.isPlayerHeadStart = true;
     }, 3000);
+
     if (!this.visible) {
       this.visible = true;
     }
 
     if (!this.clock.running) {
-      this.currentAnimation = this.runningAnimation;
+      /*       this.currentAnimation = this.runningAnimation;
       this.currentAnimation.reset();
-      this.currentAnimation.play();
+      this.currentAnimation.play(); */
       this.clock.start();
       this.speed = 220;
       this.player.position.x = 0;
@@ -426,8 +444,9 @@ export default class RunningScene extends Scene {
 
     this.activeCoinsGroup.position.z = -1200;
     this.currentAnimation.stop();
-
+    this.player.visible = false;
     this.clock.stop();
+    this.player.rotation.x = 0;
   }
 
   private gameOver() {
@@ -439,6 +458,9 @@ export default class RunningScene extends Scene {
       (document.getElementById('game-over-modal') as HTMLInputElement).style.display = 'block';
       (document.querySelector('#current-score') as HTMLInputElement).innerHTML = this.scores.toString();
       (document.querySelector('#current-coins') as HTMLInputElement).innerHTML = this.coins.toString();
+
+      this.stumbleAnimation.reset();
+      this.player.rotation.x = (90 * (Math.PI / 180));
     }, 3000);
     this.stumbleAnimation.reset();
     this.stumbleAnimation.setLoop(1, 1);
@@ -464,7 +486,7 @@ export default class RunningScene extends Scene {
     (document.querySelector('.coins-count') as HTMLInputElement).innerHTML = '0';
     this.runningAnimation.reset();
     this.currentAnimation.crossFadeTo(this.runningAnimation, 0, false).play();
-    this.player.position.z = -110;
+    this.player.rotation.x = 0;
     this.isGameOver = false;
     this.isGamePaused = false;
     this.currentAnimation = this.runningAnimation;
