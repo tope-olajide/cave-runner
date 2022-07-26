@@ -70,5 +70,11 @@ export default class MainMenuScene extends Scene {
     }
   }
 
-  hide() {}
+  hide() {
+    this.visible = false;
+    this.clock.stop();
+    (document.querySelector('#main-menu-buttons') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('.high-score-container') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'none';
+  }
 }
