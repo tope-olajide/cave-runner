@@ -7,6 +7,7 @@ import {
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
 import TWEEN, { Tween } from '@tweenjs/tween.js';
+import allCharacters from '../allCharacters';
 
 export default class RunningScene extends Scene {
   private fbxLoader = new FBXLoader();
@@ -92,6 +93,50 @@ export default class RunningScene extends Scene {
   private touchstartY = 0;
 
   private touchendY = 0;
+
+  private xbot = new Object3D();
+
+  private xbotRunningAnimation = new Object3D();
+
+  private xbotJumpingAnimation = new Object3D();
+
+  private xbotSlidingAnimation = new Object3D();
+
+  private xbotStumbleAnimation = new Object3D();
+
+  private jolleen = new Object3D();
+
+  private jolleenRunningAnimation = new Object3D();
+
+  private jolleenJumpingAnimation = new Object3D();
+
+  private jolleenSlidingAnimation = new Object3D();
+
+  private jolleenStumbleAnimation = new Object3D();
+
+  private peasantGirl = new Object3D();
+
+  private peasantGirlRunningAnimation = new Object3D();
+
+  private peasantGirlJumpingAnimation = new Object3D();
+
+  private peasantGirlSlidingAnimation = new Object3D();
+
+  private peasantGirlStumbleAnimation = new Object3D();
+
+  private allGameCharacters: IallGameCharacters[] = [];
+
+  private charactersContainer: Object3D[] = [];
+
+  private runningAnimationsContainer: Object3D[] = [];
+
+  private jumpingAnimationsContainer: Object3D[] = [];
+
+  private slidingAnimationsContainer: Object3D[] = [];
+
+  private stumbleAnimationsContainer: Object3D[] = [];
+
+  private activePlayerIndex = 0;
 
   async load() {
     const ambient = new AmbientLight(0xFFFFFF, 2.5);
@@ -197,6 +242,76 @@ export default class RunningScene extends Scene {
         this.handleTouch();
       }, false);
     }
+
+    if (!JSON.parse(localStorage.getItem('allGameCharacters')!)) {
+      localStorage.setItem('allGameCharacters', JSON.stringify(allCharacters));
+    }
+
+    this.allGameCharacters = (JSON.parse(localStorage.getItem('allGameCharacters')!));
+
+    this.xbot = await this.fbxLoader.loadAsync(this.allGameCharacters[0].model);
+    this.xbotRunningAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[0]
+      .runAnimation);
+    this.xbotJumpingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[0]
+      .jumpAnimation);
+    this.xbotSlidingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[0]
+      .slideAnimation);
+    this.xbotStumbleAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[0]
+      .stumbleAnimation);
+    this.xbotSlidingAnimation.animations[0].tracks.shift();
+
+    this.jolleen = await this.fbxLoader.loadAsync(this.allGameCharacters[1].model);
+    this.jolleenRunningAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[1]
+      .runAnimation);
+    this.jolleenJumpingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[1]
+      .jumpAnimation);
+    this.jolleenSlidingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[1]
+      .slideAnimation);
+    this.jolleenStumbleAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[1]
+      .stumbleAnimation);
+    this.jolleenSlidingAnimation.animations[0].tracks.shift();
+
+    this.peasantGirl = await this.fbxLoader.loadAsync(this.allGameCharacters[2].model);
+    this.peasantGirlRunningAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[2]
+      .runAnimation);
+    this.peasantGirlJumpingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[2]
+      .jumpAnimation);
+    this.peasantGirlSlidingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[2]
+      .slideAnimation);
+    this.peasantGirlStumbleAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[2]
+      .stumbleAnimation);
+    this.peasantGirlStumbleAnimation.animations[0].tracks.shift();
+
+    this.xbot.visible = false;
+    this.jolleen.visible = false;
+    this.peasantGirl.visible = false;
+
+    this.charactersContainer.push(this.xbot, this.jolleen, this.peasantGirl);
+
+    this.add(this.charactersContainer[0]);
+    this.add(this.charactersContainer[1]);
+    this.add(this.charactersContainer[2]);
+
+    this.runningAnimationsContainer.push(
+      this.xbotRunningAnimation,
+      this.jolleenRunningAnimation,
+      this.peasantGirlRunningAnimation,
+    );
+    this.jumpingAnimationsContainer.push(
+      this.xbotJumpingAnimation,
+      this.jolleenJumpingAnimation,
+      this.peasantGirlJumpingAnimation,
+    );
+    this.slidingAnimationsContainer.push(
+      this.xbotSlidingAnimation,
+      this.jolleenSlidingAnimation,
+      this.peasantGirlSlidingAnimation,
+    );
+    this.stumbleAnimationsContainer.push(
+      this.xbotStumbleAnimation,
+      this.jolleenStumbleAnimation,
+      this.peasantGirlStumbleAnimation,
+    );
   }
 
   initialize() {
@@ -313,7 +428,6 @@ export default class RunningScene extends Scene {
     this.currentAnimation.stop();
 
     this.clock.stop();
-    console.log('hide');
   }
 
   private gameOver() {
