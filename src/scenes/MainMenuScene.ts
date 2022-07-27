@@ -110,6 +110,34 @@ export default class MainMenuScene extends Scene {
     this.hide();
   }
 
+  displaySignUpForm() {
+    (document.querySelector('#sign-in-modal') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('#sign-up-modal') as HTMLInputElement).style.display = 'block';
+  }
+
+  displaySignInForm() {
+    (document.querySelector('#sign-up-modal') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('#sign-in-modal') as HTMLInputElement).style.display = 'block';
+  }
+
+  closeSignUpForm() {
+    (document.querySelector('#sign-up-modal') as HTMLInputElement).style.display = 'none';
+  }
+
+  closeSignInForm = () => {
+    (document.querySelector('#sign-in-modal') as HTMLInputElement).style.display = 'none';
+  };
+
+  loadLoginScreen() {
+    (document.querySelector('#sign-out-button') as HTMLInputElement).style.display = 'block';
+    (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'none';
+  }
+
+  loadLogoutScreen() {
+    (document.querySelector('#sign-out-button') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'block';
+  }
+
   initialize() {
     (document.querySelector('#main-menu-buttons') as HTMLInputElement).style.display = 'block';
     (document.querySelector('.high-score-container') as HTMLInputElement).style.display = 'block';
@@ -138,6 +166,39 @@ export default class MainMenuScene extends Scene {
     this.dancingAnimation = this.animationMixer
       .clipAction(this.activeCharacterAnimation.animations[0]);
     this.dancingAnimation.play();
+
+    (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'block';
+    (document.querySelector('.auth-button') as HTMLInputElement).onclick = () => {
+      this.displaySignUpForm();
+    };
+    (document.querySelector('#close-signup-form') as HTMLInputElement).onclick = () => {
+      this.closeSignUpForm();
+    };
+    (document.querySelector('#close-signin-form') as HTMLInputElement).onclick = () => {
+      this.closeSignInForm();
+    };
+    /*   (document.querySelector("#sign-out-button") as HTMLInputElement).onclick = () => {
+        this.logoutUser()
+    }; */
+
+    (document.querySelector('#sign-in-button') as HTMLInputElement).onclick = () => {
+      this.displaySignInForm();
+    };
+    (document.querySelector('#sign-up-button') as HTMLInputElement).onclick = () => {
+      this.displaySignUpForm();
+    };
+    /*  (document.querySelector("#score-board-button") as HTMLInputElement).onclick = () => {
+        this.getHighScores()
+    }; */
+    /*  (document.querySelector("#close-highscores-modal") as HTMLInputElement).onclick = () => {
+        this.closeHighScoreModal()
+    }; */
+    (document.querySelector('#register-button') as HTMLInputElement).onclick = () => {
+      this.SignUpUser();
+    };
+    (document.querySelector('#login-button') as HTMLInputElement).onclick = () => {
+      this.SignInUser();
+    };
   }
 
   update() {
@@ -154,5 +215,6 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('.high-score-container') as HTMLInputElement).style.display = 'none';
     (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'none';
     this.activeCharacter.visible = false;
+    (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'none';
   }
 }
