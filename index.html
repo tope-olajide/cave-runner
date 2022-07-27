@@ -1,78 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-    <title>Cave Runner</title>
-  </head>
 
-  <body>
-    <div class="coins-container">
-      <h3>Coins: <span class="coins-count">0</span></h3>
-    </div>
-    <div class="scores-container">
-      <h3>Scores: <span class="scores-count">0</span></h3>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./src/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <title>Cave Runner</title>
+</head>
 
-    <div class="pause-button">
-      <button class="btn-icon-only">
-        <span class="btn-icon"><i class="fa-solid fa-pause"></i></span>
+<body>
+  <div class="coins-container">
+    <h3>Coins: <span class="coins-count">0</span></h3>
+  </div>
+  <div class="scores-container">
+    <h3>Scores: <span class="scores-count">0</span></h3>
+  </div>
+
+  <div class="pause-button">
+    <button class="btn-icon-only">
+      <span class="btn-icon"><i class="fa-solid fa-pause"></i></span>
+    </button>
+  </div>
+
+  <div id="game-paused-modal" class="modal">
+    <div class="modal-body" id="">
+      <br />
+      <h1>Game Paused!</h1>
+      <br />
+      <button class="btn" id="resume-button">
+        <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
+        Resume</button><br />
+      <button class="btn" id="quit-button">
+        <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
+        Quit Game</button><br />
+    </div>
+  </div>
+
+  <div id="game-over-modal" class="modal">
+    <div class="modal-body" id="game-over-modal">
+      <h1>Game Over</h1>
+      <p>Your Scores:<span id="current-score"></span></p>
+      <p>Coins:<span id="current-coins"></span></p>
+      <button class="btn" id="restart-button">
+        <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
+        Restart
+      </button>
+      <button class="btn" id="game-over-quit-button">
+        <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
+        Quit Game
       </button>
     </div>
+  </div>
 
-    <div id="game-paused-modal" class="modal">
-      <div class="modal-body" id="">
-        <br />
-        <h1>Game Paused!</h1>
-        <br />
-        <button class="btn" id="resume-button">
-          <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
-          Resume</button
-        ><br />
-        <button class="btn" id="quit-button">
-          <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
-          Quit Game</button
-        ><br />
-      </div>
-    </div>
+  <!-- Main menu buttons  -->
+  <section id="main-menu-buttons">
+    <button id="play-game-button" class="btn">
+      <span class="btn-icon"><i class="fa-solid fa-play"></i></span> Play
+    </button>
+    <button class="btn" id="Characters-selection-button">
+      <span class="btn-icon"><i class="fa-solid fa-users"></i></span>Characters
+    </button>
+    <button class="btn">
+      <span class="btn-icon"><i class="fa-solid fa-gear"></i></span>Settings
+    </button>
+  </section>
 
-    <div id="game-over-modal" class="modal">
-      <div class="modal-body" id="game-over-modal">
-        <h1>Game Over</h1>
-        <p>Your Scores:<span id="current-score"></span></p>
-        <p>Coins:<span id="current-coins"></span></p>
-        <button class="btn" id="restart-button">
-          <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
-          Restart
-        </button>
-        <button class="btn" id="game-over-quit-button">
-          <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
-          Quit Game
-        </button>
-      </div>
-    </div>
-
-    <!-- Main menu buttons  -->
-<section id="main-menu-buttons">
-  <button id="play-game-button" class="btn">
-    <span class="btn-icon"><i class="fa-solid fa-play"></i></span
-    > Play
+  <div class="auth-button">
+    <button class="btn-icon-only">
+      <span class="btn-icon"><i class="fa-solid fa-user-plus"></i></span>
+    </button>
+  </div>
+  <button id="sign-out-button" class="btn">
+    <span class="btn-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Sign out
   </button>
-  <button class="btn" id="Characters-selection-button">
-    <span class="btn-icon"><i class="fa-solid fa-users"></i></span
-    >Characters
+  <button id="score-board-button" class="btn">
+    <span class="btn-icon"><i class="fa-solid fa-crown"></i></span> High Scores
   </button>
-  <button class="btn">
-    <span class="btn-icon"><i class="fa-solid fa-gear"></i></span
-    >Settings
-  </button>
-</section>
 
   <!--Character Selection Section -->
   <div class="home-menu">
@@ -103,18 +108,117 @@
     </section>
   </div>
 
-<!-- Coins and Highscores section -->
-<div class="high-score-container"><h3>High Score: <span class="high-score">0</span> </h3></div>
-<div class="total-coins-container"><h3> Total Coins: <span class="total-coins">0</span></h3></div>
+  <!-- Coins and Highscores section -->
+  <div class="high-score-container">
+    <h3>High Score: <span class="high-score">0</span> </h3>
+  </div>
+  <div class="total-coins-container">
+    <h3> Total Coins: <span class="total-coins">0</span></h3>
+  </div>
 
-
-    <div class="loading-container">
-      <img src="./public/assets/images/loader.gif" />
+  <!-- Sign up modal -->
+  <div id="sign-up-modal" class="modal">
+    <div class="modal-body">
+      <div class="form">
+        <h2 class="close" id="close-signup-form"><span><i class="fa-solid fa-times"></i></span></h2>
+        <h2>Sign Up</h2>
+        <input id="signup-name" type="text" value="name">
+        <input id="signup-email" type="text" value="email">
+        <input id="signup-password" type="password" value="password">
+        <p>Already have an account?<button id="sign-in-button" class="btn"><span class="btn-icon"><i
+                class="fa-solid fa-arrow-right-to-bracket"></i></span> Sign in</button></p>
+        <button id="register-button" class="btn">Register</button>
+      </div>
     </div>
-    <div class="disable-touch"></div>
-    <div></div>
-    <canvas id="app"> </canvas>
+  </div>
 
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+  <div id="sign-in-modal" class="modal">
+    <div class="modal-body">
+      <div class="form">
+        <h2 id="close-signin-form" class="close"><span><i class="fa-solid fa-times"></i></span></h2>
+        <h2>Sign In</h2>
+        <input id="signin-email" type="text" value="email"><br />
+        <input id="signin-password" type="password" value="password">
+        <p>Don't have an account?<button id="sign-up-button" class="btn"><span class="btn-icon"><i
+                class="fa-solid fa-user-plus"></i></span> Sign up</button></p>
+        <button id="login-button" class="btn">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="high-scores-modal" class="modal">
+
+    <div class="modal-body">
+      <h2 class="close" id="close-highscores-modal"><span><i class="fa-solid fa-times"></i></span></h2><br /><br />
+      <h3>Top 10 Runners</h3>
+      <table>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Scores</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+  <div class="loading-container">
+    <img src="./public/assets/images/loader.gif" />
+  </div>
+  <div class="disable-touch"></div>
+
+  <canvas id="app"> </canvas>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
