@@ -134,8 +134,19 @@ export default class MainMenuScene extends Scene {
     const username = (document.getElementById('signup-username-text') as HTMLInputElement).value;
     const password = (document.getElementById('signup-password-text') as HTMLInputElement).value;
     const repeatPassword = (document.getElementById('signup-repeat-password-text') as HTMLInputElement).value;
-    const signUpData = { username, password, repeatPassword };
+    const country = (document.getElementById('country') as HTMLInputElement).value;
+    const signUpData = { username, password, repeatPassword, country };
     console.log(signUpData);
+    if (username.length < 4) {
+      Toastify({
+        text: '❎ Username is too short!',
+        duration: 3000,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    }
     if (password.length < 5) {
       Toastify({
         text: '❎ Password is too short!',
