@@ -1,78 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-    <title>Cave Runner</title>
-  </head>
 
-  <body>
-    <div class="coins-container">
-      <h3>Coins: <span class="coins-count">0</span></h3>
-    </div>
-    <div class="scores-container">
-      <h3>Scores: <span class="scores-count">0</span></h3>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./src/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <title>Cave Runner</title>
+</head>
 
-    <div class="pause-button">
-      <button class="btn-icon-only">
-        <span class="btn-icon"><i class="fa-solid fa-pause"></i></span>
+<body>
+  <div class="coins-container">
+    <h3>Coins: <span class="coins-count">0</span></h3>
+  </div>
+  <div class="scores-container">
+    <h3>Scores: <span class="scores-count">0</span></h3>
+  </div>
+
+  <div class="pause-button">
+    <button class="btn-icon-only">
+      <span class="btn-icon"><i class="fa-solid fa-pause"></i></span>
+    </button>
+  </div>
+
+  <div id="game-paused-modal" class="modal">
+    <div class="modal-body" id="">
+      <br />
+      <h1>Game Paused!</h1>
+      <br />
+      <button class="btn" id="resume-button">
+        <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
+        Resume</button><br />
+      <button class="btn" id="quit-button">
+        <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
+        Quit Game</button><br />
+    </div>
+  </div>
+
+  <div id="game-over-modal" class="modal">
+    <div class="modal-body" id="game-over-modal">
+      <h1>Game Over</h1>
+      <p>Your Scores:<span id="current-score"></span></p>
+      <p>Coins:<span id="current-coins"></span></p>
+      <button class="btn" id="restart-button">
+        <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
+        Restart
+      </button>
+      <button class="btn" id="game-over-quit-button">
+        <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
+        Quit Game
       </button>
     </div>
+  </div>
 
-    <div id="game-paused-modal" class="modal">
-      <div class="modal-body" id="">
-        <br />
-        <h1>Game Paused!</h1>
-        <br />
-        <button class="btn" id="resume-button">
-          <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
-          Resume</button
-        ><br />
-        <button class="btn" id="quit-button">
-          <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
-          Quit Game</button
-        ><br />
-      </div>
-    </div>
+  <!-- Main menu buttons  -->
+  <section id="main-menu-buttons">
+    <button id="play-game-button" class="btn">
+      <span class="btn-icon"><i class="fa-solid fa-play"></i></span> Play
+    </button>
+    <button class="btn" id="Characters-selection-button">
+      <span class="btn-icon"><i class="fa-solid fa-users"></i></span>Characters
+    </button>
+    <button class="btn">
+      <span class="btn-icon"><i class="fa-solid fa-gear"></i></span>About
+    </button>
+  </section>
 
-    <div id="game-over-modal" class="modal">
-      <div class="modal-body" id="game-over-modal">
-        <h1>Game Over</h1>
-        <p>Your Scores:<span id="current-score"></span></p>
-        <p>Coins:<span id="current-coins"></span></p>
-        <button class="btn" id="restart-button">
-          <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
-          Restart
-        </button>
-        <button class="btn" id="game-over-quit-button">
-          <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
-          Quit Game
-        </button>
-      </div>
-    </div>
-
-    <!-- Main menu buttons  -->
-<section id="main-menu-buttons">
-  <button id="play-game-button" class="btn">
-    <span class="btn-icon"><i class="fa-solid fa-play"></i></span
-    > Play
+  <div class="auth-button">
+    <button class="btn-icon-only">
+      <span class="btn-icon"><i class="fa-solid fa-user-plus"></i></span>
+    </button>
+  </div>
+  <button id="sign-out-button" class="btn">
+    <span class="btn-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Sign out
   </button>
-  <button class="btn" id="Characters-selection-button">
-    <span class="btn-icon"><i class="fa-solid fa-users"></i></span
-    >Characters
+  <button id="score-board-button" class="btn">
+    <span class="btn-icon"><i class="fa-solid fa-crown"></i></span> High Scores
   </button>
-  <button class="btn">
-    <span class="btn-icon"><i class="fa-solid fa-gear"></i></span
-    >Settings
-  </button>
-</section>
 
   <!--Character Selection Section -->
   <div class="home-menu">
@@ -103,18 +109,377 @@
     </section>
   </div>
 
-<!-- Coins and Highscores section -->
-<div class="high-score-container"><h3>High Score: <span class="high-score">0</span> </h3></div>
-<div class="total-coins-container"><h3> Total Coins: <span class="total-coins">0</span></h3></div>
+  <!-- Coins and Highscores section -->
+  <div class="high-score-container">
+    <h3>High Score: <span class="high-score">0</span> </h3>
+  </div>
+  <div class="total-coins-container">
+    <h3> Total Coins: <span class="total-coins">0</span></h3>
+  </div>
 
-
-    <div class="loading-container">
-      <img src="./public/assets/images/loader.gif" />
+  <!-- Sign up modal -->
+  <div id="sign-up-modal" class="modal">
+    <div class="modal-body">
+      <div class="form">
+        <h2 class="close" id="close-signup-form"><span><i class="fa-solid fa-times"></i></span></h2>
+        <h2>Sign Up</h2>
+        <p>username:</p>
+        <input id="signup-username-text" type="text" value="">
+        <p>password:</p>
+        <input id="signup-password-text" type="password" value="">
+        <p>Repeat password:</p>
+        <input id="signup-repeat-password-text" type="password" value="">
+        <p>Rep Your Country:</p>
+        <select id="country" name="country">
+          <option value="NG">Nigeria</option>
+          <option value="AF">Afghanistan</option>
+          <option value="AX">Aland Islands</option>
+          <option value="AL">Albania</option>
+          <option value="DZ">Algeria</option>
+          <option value="AS">American Samoa</option>
+          <option value="AD">Andorra</option>
+          <option value="AO">Angola</option>
+          <option value="AI">Anguilla</option>
+          <option value="AQ">Antarctica</option>
+          <option value="AG">Antigua and Barbuda</option>
+          <option value="AR">Argentina</option>
+          <option value="AM">Armenia</option>
+          <option value="AW">Aruba</option>
+          <option value="AU">Australia</option>
+          <option value="AT">Austria</option>
+          <option value="AZ">Azerbaijan</option>
+          <option value="BS">Bahamas</option>
+          <option value="BH">Bahrain</option>
+          <option value="BD">Bangladesh</option>
+          <option value="BB">Barbados</option>
+          <option value="BY">Belarus</option>
+          <option value="BE">Belgium</option>
+          <option value="BZ">Belize</option>
+          <option value="BJ">Benin</option>
+          <option value="BM">Bermuda</option>
+          <option value="BT">Bhutan</option>
+          <option value="BO">Bolivia</option>
+          <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+          <option value="BA">Bosnia and Herzegovina</option>
+          <option value="BW">Botswana</option>
+          <option value="BV">Bouvet Island</option>
+          <option value="BR">Brazil</option>
+          <option value="IO">British Indian Ocean Territory</option>
+          <option value="BN">Brunei Darussalam</option>
+          <option value="BG">Bulgaria</option>
+          <option value="BF">Burkina Faso</option>
+          <option value="BI">Burundi</option>
+          <option value="KH">Cambodia</option>
+          <option value="CM">Cameroon</option>
+          <option value="CA">Canada</option>
+          <option value="CV">Cape Verde</option>
+          <option value="KY">Cayman Islands</option>
+          <option value="CF">Central African Republic</option>
+          <option value="TD">Chad</option>
+          <option value="CL">Chile</option>
+          <option value="CN">China</option>
+          <option value="CX">Christmas Island</option>
+          <option value="CC">Cocos (Keeling) Islands</option>
+          <option value="CO">Colombia</option>
+          <option value="KM">Comoros</option>
+          <option value="CG">Congo</option>
+          <option value="CD">Congo, Democratic Republic of the Congo</option>
+          <option value="CK">Cook Islands</option>
+          <option value="CR">Costa Rica</option>
+          <option value="CI">Cote D'Ivoire</option>
+          <option value="HR">Croatia</option>
+          <option value="CU">Cuba</option>
+          <option value="CW">Curacao</option>
+          <option value="CY">Cyprus</option>
+          <option value="CZ">Czech Republic</option>
+          <option value="DK">Denmark</option>
+          <option value="DJ">Djibouti</option>
+          <option value="DM">Dominica</option>
+          <option value="DO">Dominican Republic</option>
+          <option value="EC">Ecuador</option>
+          <option value="EG">Egypt</option>
+          <option value="SV">El Salvador</option>
+          <option value="GQ">Equatorial Guinea</option>
+          <option value="ER">Eritrea</option>
+          <option value="EE">Estonia</option>
+          <option value="ET">Ethiopia</option>
+          <option value="FK">Falkland Islands (Malvinas)</option>
+          <option value="FO">Faroe Islands</option>
+          <option value="FJ">Fiji</option>
+          <option value="FI">Finland</option>
+          <option value="FR">France</option>
+          <option value="GF">French Guiana</option>
+          <option value="PF">French Polynesia</option>
+          <option value="TF">French Southern Territories</option>
+          <option value="GA">Gabon</option>
+          <option value="GM">Gambia</option>
+          <option value="GE">Georgia</option>
+          <option value="DE">Germany</option>
+          <option value="GH">Ghana</option>
+          <option value="GI">Gibraltar</option>
+          <option value="GR">Greece</option>
+          <option value="GL">Greenland</option>
+          <option value="GD">Grenada</option>
+          <option value="GP">Guadeloupe</option>
+          <option value="GU">Guam</option>
+          <option value="GT">Guatemala</option>
+          <option value="GG">Guernsey</option>
+          <option value="GN">Guinea</option>
+          <option value="GW">Guinea-Bissau</option>
+          <option value="GY">Guyana</option>
+          <option value="HT">Haiti</option>
+          <option value="HM">Heard Island and Mcdonald Islands</option>
+          <option value="VA">Holy See (Vatican City State)</option>
+          <option value="HN">Honduras</option>
+          <option value="HK">Hong Kong</option>
+          <option value="HU">Hungary</option>
+          <option value="IS">Iceland</option>
+          <option value="IN">India</option>
+          <option value="ID">Indonesia</option>
+          <option value="IR">Iran, Islamic Republic of</option>
+          <option value="IQ">Iraq</option>
+          <option value="IE">Ireland</option>
+          <option value="IM">Isle of Man</option>
+          <option value="IL">Israel</option>
+          <option value="IT">Italy</option>
+          <option value="JM">Jamaica</option>
+          <option value="JP">Japan</option>
+          <option value="JE">Jersey</option>
+          <option value="JO">Jordan</option>
+          <option value="KZ">Kazakhstan</option>
+          <option value="KE">Kenya</option>
+          <option value="KI">Kiribati</option>
+          <option value="KP">Korea, Democratic People's Republic of</option>
+          <option value="KR">Korea, Republic of</option>
+          <option value="XK">Kosovo</option>
+          <option value="KW">Kuwait</option>
+          <option value="KG">Kyrgyzstan</option>
+          <option value="LA">Lao People's Democratic Republic</option>
+          <option value="LV">Latvia</option>
+          <option value="LB">Lebanon</option>
+          <option value="LS">Lesotho</option>
+          <option value="LR">Liberia</option>
+          <option value="LY">Libyan Arab Jamahiriya</option>
+          <option value="LI">Liechtenstein</option>
+          <option value="LT">Lithuania</option>
+          <option value="LU">Luxembourg</option>
+          <option value="MO">Macao</option>
+          <option value="MK">Macedonia, the Former Yugoslav Republic of</option>
+          <option value="MG">Madagascar</option>
+          <option value="MW">Malawi</option>
+          <option value="MY">Malaysia</option>
+          <option value="MV">Maldives</option>
+          <option value="ML">Mali</option>
+          <option value="MT">Malta</option>
+          <option value="MH">Marshall Islands</option>
+          <option value="MQ">Martinique</option>
+          <option value="MR">Mauritania</option>
+          <option value="MU">Mauritius</option>
+          <option value="YT">Mayotte</option>
+          <option value="MX">Mexico</option>
+          <option value="FM">Micronesia, Federated States of</option>
+          <option value="MD">Moldova, Republic of</option>
+          <option value="MC">Monaco</option>
+          <option value="MN">Mongolia</option>
+          <option value="ME">Montenegro</option>
+          <option value="MS">Montserrat</option>
+          <option value="MA">Morocco</option>
+          <option value="MZ">Mozambique</option>
+          <option value="MM">Myanmar</option>
+          <option value="NA">Namibia</option>
+          <option value="NR">Nauru</option>
+          <option value="NP">Nepal</option>
+          <option value="NL">Netherlands</option>
+          <option value="AN">Netherlands Antilles</option>
+          <option value="NC">New Caledonia</option>
+          <option value="NZ">New Zealand</option>
+          <option value="NI">Nicaragua</option>
+          <option value="NE">Niger</option>
+          <option value="NU">Niue</option>
+          <option value="NF">Norfolk Island</option>
+          <option value="MP">Northern Mariana Islands</option>
+          <option value="NO">Norway</option>
+          <option value="OM">Oman</option>
+          <option value="PK">Pakistan</option>
+          <option value="PW">Palau</option>
+          <option value="PS">Palestinian Territory, Occupied</option>
+          <option value="PA">Panama</option>
+          <option value="PG">Papua New Guinea</option>
+          <option value="PY">Paraguay</option>
+          <option value="PE">Peru</option>
+          <option value="PH">Philippines</option>
+          <option value="PN">Pitcairn</option>
+          <option value="PL">Poland</option>
+          <option value="PT">Portugal</option>
+          <option value="PR">Puerto Rico</option>
+          <option value="QA">Qatar</option>
+          <option value="RE">Reunion</option>
+          <option value="RO">Romania</option>
+          <option value="RU">Russian Federation</option>
+          <option value="RW">Rwanda</option>
+          <option value="BL">Saint Barthelemy</option>
+          <option value="SH">Saint Helena</option>
+          <option value="KN">Saint Kitts and Nevis</option>
+          <option value="LC">Saint Lucia</option>
+          <option value="MF">Saint Martin</option>
+          <option value="PM">Saint Pierre and Miquelon</option>
+          <option value="VC">Saint Vincent and the Grenadines</option>
+          <option value="WS">Samoa</option>
+          <option value="SM">San Marino</option>
+          <option value="ST">Sao Tome and Principe</option>
+          <option value="SA">Saudi Arabia</option>
+          <option value="SN">Senegal</option>
+          <option value="RS">Serbia</option>
+          <option value="CS">Serbia and Montenegro</option>
+          <option value="SC">Seychelles</option>
+          <option value="SL">Sierra Leone</option>
+          <option value="SG">Singapore</option>
+          <option value="SX">Sint Maarten</option>
+          <option value="SK">Slovakia</option>
+          <option value="SI">Slovenia</option>
+          <option value="SB">Solomon Islands</option>
+          <option value="SO">Somalia</option>
+          <option value="ZA">South Africa</option>
+          <option value="GS">South Georgia and the South Sandwich Islands</option>
+          <option value="SS">South Sudan</option>
+          <option value="ES">Spain</option>
+          <option value="LK">Sri Lanka</option>
+          <option value="SD">Sudan</option>
+          <option value="SR">Suriname</option>
+          <option value="SJ">Svalbard and Jan Mayen</option>
+          <option value="SZ">Swaziland</option>
+          <option value="SE">Sweden</option>
+          <option value="CH">Switzerland</option>
+          <option value="SY">Syrian Arab Republic</option>
+          <option value="TW">Taiwan, Province of China</option>
+          <option value="TJ">Tajikistan</option>
+          <option value="TZ">Tanzania, United Republic of</option>
+          <option value="TH">Thailand</option>
+          <option value="TL">Timor-Leste</option>
+          <option value="TG">Togo</option>
+          <option value="TK">Tokelau</option>
+          <option value="TO">Tonga</option>
+          <option value="TT">Trinidad and Tobago</option>
+          <option value="TN">Tunisia</option>
+          <option value="TR">Turkey</option>
+          <option value="TM">Turkmenistan</option>
+          <option value="TC">Turks and Caicos Islands</option>
+          <option value="TV">Tuvalu</option>
+          <option value="UG">Uganda</option>
+          <option value="UA">Ukraine</option>
+          <option value="AE">United Arab Emirates</option>
+          <option value="GB">United Kingdom</option>
+          <option value="US">United States</option>
+          <option value="UM">United States Minor Outlying Islands</option>
+          <option value="UY">Uruguay</option>
+          <option value="UZ">Uzbekistan</option>
+          <option value="VU">Vanuatu</option>
+          <option value="VE">Venezuela</option>
+          <option value="VN">Viet Nam</option>
+          <option value="VG">Virgin Islands, British</option>
+          <option value="VI">Virgin Islands, U.s.</option>
+          <option value="WF">Wallis and Futuna</option>
+          <option value="EH">Western Sahara</option>
+          <option value="YE">Yemen</option>
+          <option value="ZM">Zambia</option>
+          <option value="ZW">Zimbabwe</option>
+      </select>
+        <p>Already have an account?<button id="sign-in-button" class="btn"><span class="btn-icon"><i
+                class="fa-solid fa-arrow-right-to-bracket"></i></span> Sign in</button></p>
+        <button id="register-button" class="btn">Register</button>
+        </div>
     </div>
-    <div class="disable-touch"></div>
-    <div></div>
-    <canvas id="app"> </canvas>
+  </div>
 
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+  <div id="sign-in-modal" class="modal">
+    <div class="modal-body">
+      <div class="form">
+        <h2 id="close-signin-form" class="close"><span><i class="fa-solid fa-times"></i></span></h2>
+        <h2>Sign In</h2>
+        
+        <input id="signin-username-text" type="text" value="username"><br />
+        <input id="signin-password-text" type="password" value="password">
+        <p>Don't have an account?<button id="sign-up-button" class="btn"><span class="btn-icon"><i
+                class="fa-solid fa-user-plus"></i></span> Sign up</button></p>
+        <button id="login-button" class="btn">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="high-scores-modal" class="modal">
+
+    <div class="modal-body">
+      <h2 class="close" id="close-highscores-modal"><span><i class="fa-solid fa-times"></i></span></h2><br /><br />
+      <h3>Top 10 Runners</h3>
+      <table>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Scores</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Smith</td>
+          <td>50000000000000</td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+  <div class="loading-container">
+    <img src="./assets/images/loader.gif" />
+  </div>
+  <div class="disable-touch"></div>
+
+  <canvas id="app"> </canvas>
+
+  <script type="module" src="/src/main.ts"></script>
+
+</body>
+
 </html>

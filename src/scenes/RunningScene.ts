@@ -293,6 +293,25 @@ export default class RunningScene extends Scene {
       this.jolleenStumbleAnimation,
       this.peasantGirlStumbleAnimation,
     );
+
+    document.onkeydown = (e) => {
+      if (!this.isGameOver && !this.isGamePaused) {
+        if (e.key === 'ArrowLeft') {
+          this.moveLeft();
+        } if (e.key === 'ArrowRight') {
+          this.moveRight();
+        }
+        if (e.key === 'ArrowUp') {
+          this.jump();
+        }
+        if (e.key === 'ArrowDown') {
+          this.slide();
+        }
+        if (e.key === ' ') {
+          this.pauseAndResumeGame();
+        }
+      }
+    };
   }
 
   initialize() {
@@ -332,24 +351,6 @@ export default class RunningScene extends Scene {
     const stumblingAnimationObject = this.stumbleAnimationsContainer[this.activePlayerIndex];
     this.stumbleAnimation = this.animationMixer.clipAction(stumblingAnimationObject.animations[0]);
 
-    document.onkeydown = (e) => {
-      if (!this.isGameOver && !this.isGamePaused) {
-        if (e.key === 'ArrowLeft') {
-          this.moveLeft();
-        } if (e.key === 'ArrowRight') {
-          this.moveRight();
-        }
-        if (e.key === 'ArrowUp') {
-          this.jump();
-        }
-        if (e.key === 'ArrowDown') {
-          this.slide();
-        }
-        if (e.key === ' ') {
-          this.pauseAndResumeGame();
-        }
-      }
-    };
     (document.querySelector('.scores-container') as HTMLInputElement).style.display = 'block';
 
     (document.querySelector('.coins-container') as HTMLInputElement).style.display = 'block';
