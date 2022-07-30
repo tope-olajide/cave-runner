@@ -266,3 +266,6 @@ th, td {
 tr:nth-child(even) {
   background-color: RoyalBlue
 }
+#country {
+  padding: 8px 0;
+}
