@@ -1,9 +1,12 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable linebreak-style */
 import {
   Scene, Object3D, AmbientLight, DirectionalLight, Clock, AnimationMixer, AnimationAction,
 } from 'three';
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+
+import Toastify from 'toastify-js';
 
 import allCharacters from '../allCharacters';
 
@@ -110,41 +113,97 @@ export default class MainMenuScene extends Scene {
     this.hide();
   }
 
-  displaySignUpForm() {
+  private displaySignUpForm() {
     (document.querySelector('#sign-in-modal') as HTMLInputElement).style.display = 'none';
     (document.querySelector('#sign-up-modal') as HTMLInputElement).style.display = 'block';
   }
 
-  displaySignInForm() {
+  private displaySignInForm() {
     (document.querySelector('#sign-up-modal') as HTMLInputElement).style.display = 'none';
     (document.querySelector('#sign-in-modal') as HTMLInputElement).style.display = 'block';
   }
 
-  closeSignUpForm() {
+  private async SignInUser() {
+    const username = (document.getElementById('signin-username-text') as HTMLInputElement).value;
+    const password = (document.getElementById('signin-password-text') as HTMLInputElement).value;
+    const loginData = { username, password };
+    console.log(loginData);
+  }
+
+  async SignUpUser() {
+    const username = (document.getElementById('signup-username-text') as HTMLInputElement).value;
+    const password = (document.getElementById('signup-password-text') as HTMLInputElement).value;
+    const repeatPassword = (document.getElementById('signup-repeat-password-text') as HTMLInputElement).value;
+    const signUpData = { username, password, repeatPassword };
+    console.log(signUpData);
+    if (password.length < 5) {
+      Toastify({
+        text: '❎ Password is too short!',
+        duration: 3000,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    }
+    if (password !== repeatPassword) {
+      Toastify({
+        text: '❎ Password does not match!',
+        duration: 3000,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    }
+  }
+
+  private closeSignUpForm() {
     (document.querySelector('#sign-up-modal') as HTMLInputElement).style.display = 'none';
   }
 
-  closeSignInForm = () => {
+  private closeSignInForm = () => {
     (document.querySelector('#sign-in-modal') as HTMLInputElement).style.display = 'none';
   };
 
-  loadLoginScreen() {
+  private loadLoginScreen() {
     (document.querySelector('#sign-out-button') as HTMLInputElement).style.display = 'block';
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'none';
   }
 
-  loadLogoutScreen() {
+  private loadLogoutScreen() {
     (document.querySelector('#sign-out-button') as HTMLInputElement).style.display = 'none';
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'block';
+  }
+
+  private async getHighScores() {
+    (document.querySelector('#high-scores-modal') as HTMLInputElement).style.display = 'block';
+  }
+
+  private closeHighScoreModal() {
+    (document.querySelector('#high-scores-modal') as HTMLInputElement).style.display = 'none';
+  }
+
+  async logoutUser() {
+    try {
+      this.loadLogoutScreen();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   initialize() {
     (document.querySelector('#main-menu-buttons') as HTMLInputElement).style.display = 'block';
     (document.querySelector('.high-score-container') as HTMLInputElement).style.display = 'block';
     (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'block';
+    (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'block';
 
     (document.querySelector('.high-score') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('highScore')!) || 0;
     (document.querySelector('.total-coins') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('totalCoins')!) || 0;
+
+    (document.querySelector('.auth-button') as HTMLInputElement).onclick = () => {
+      this.displaySignUpForm();
+    };
 
     if (!this.visible) {
       this.visible = true;
@@ -168,18 +227,16 @@ export default class MainMenuScene extends Scene {
     this.dancingAnimation.play();
 
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'block';
-    (document.querySelector('.auth-button') as HTMLInputElement).onclick = () => {
-      this.displaySignUpForm();
-    };
+
     (document.querySelector('#close-signup-form') as HTMLInputElement).onclick = () => {
       this.closeSignUpForm();
     };
     (document.querySelector('#close-signin-form') as HTMLInputElement).onclick = () => {
       this.closeSignInForm();
     };
-    /*   (document.querySelector("#sign-out-button") as HTMLInputElement).onclick = () => {
-        this.logoutUser()
-    }; */
+    (document.querySelector('#sign-out-button') as HTMLInputElement).onclick = () => {
+      this.logoutUser();
+    };
 
     (document.querySelector('#sign-in-button') as HTMLInputElement).onclick = () => {
       this.displaySignInForm();
@@ -187,12 +244,12 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('#sign-up-button') as HTMLInputElement).onclick = () => {
       this.displaySignUpForm();
     };
-    /*  (document.querySelector("#score-board-button") as HTMLInputElement).onclick = () => {
-        this.getHighScores()
-    }; */
-    /*  (document.querySelector("#close-highscores-modal") as HTMLInputElement).onclick = () => {
-        this.closeHighScoreModal()
-    }; */
+    (document.querySelector('#score-board-button') as HTMLInputElement).onclick = () => {
+      this.getHighScores();
+    };
+    (document.querySelector('#close-highscores-modal') as HTMLInputElement).onclick = () => {
+      this.closeHighScoreModal();
+    };
     (document.querySelector('#register-button') as HTMLInputElement).onclick = () => {
       this.SignUpUser();
     };
@@ -216,5 +273,6 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'none';
     this.activeCharacter.visible = false;
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'block';
   }
 }
