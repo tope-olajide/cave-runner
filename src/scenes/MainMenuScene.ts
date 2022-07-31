@@ -11,16 +11,16 @@ import Toastify from 'toastify-js';
 import allCharacters from '../allCharacters';
 
 interface IallGameCharacters {
-    name: string
-    model: string
-    isActive: boolean
-    price: number
-    isLocked: boolean
-    danceAnimation: string
-    runAnimation: string
-    slideAnimation: string
-    stumbleAnimation: string
-    jumpAnimation: string
+  name: string
+  model: string
+  isActive: boolean
+  price: number
+  isLocked: boolean
+  danceAnimation: string
+  runAnimation: string
+  slideAnimation: string
+  stumbleAnimation: string
+  jumpAnimation: string
 }
 
 export default class MainMenuScene extends Scene {
@@ -128,6 +128,36 @@ export default class MainMenuScene extends Scene {
     const password = (document.getElementById('signin-password-text') as HTMLInputElement).value;
     const loginData = { username, password };
     console.log(loginData);
+    try {
+      const response = await fetch('/.netlify/functions/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+      });
+      console.log(response);
+      const data = await response.json();
+
+      Toastify({
+        text: `❎ ${data}`,
+        duration: 3000,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    } catch (error) {
+      console.log(error);
+      Toastify({
+        text: `❎❎❎ ${error}`,
+        duration: 3000,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    }
   }
 
   async SignUpUser() {
@@ -135,7 +165,9 @@ export default class MainMenuScene extends Scene {
     const password = (document.getElementById('signup-password-text') as HTMLInputElement).value;
     const repeatPassword = (document.getElementById('signup-repeat-password-text') as HTMLInputElement).value;
     const country = (document.getElementById('country') as HTMLInputElement).value;
-    const signUpData = { username, password, repeatPassword, country };
+    const signUpData = {
+      username, password, repeatPassword, country,
+    };
     console.log(signUpData);
     if (username.length < 4) {
       Toastify({
@@ -160,6 +192,39 @@ export default class MainMenuScene extends Scene {
     if (password !== repeatPassword) {
       Toastify({
         text: '❎ Password does not match!',
+        duration: 3000,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    }
+    try {
+      const response = await fetch('/.netlify/functions/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(signUpData),
+      });
+      const { message, token } = await response.json();
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+      console.log(token);
+
+      Toastify({
+        text: ` ${message}`,
+        duration: 7000,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    } catch (error) {
+      console.log(error);
+      Toastify({
+        text: `❎❎❎ ${error}`,
         duration: 3000,
         close: true,
         gravity: 'bottom',
