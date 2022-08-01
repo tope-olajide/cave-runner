@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-/* eslint-disable linebreak-style */
 import {
   Scene, Object3D, AmbientLight, DirectionalLight, Clock, AnimationMixer, AnimationAction,
 } from 'three';
@@ -10,17 +9,19 @@ import Toastify from 'toastify-js';
 
 import allCharacters from '../allCharacters';
 
+import 'flag-icons';
+
 interface IallGameCharacters {
-    name: string
-    model: string
-    isActive: boolean
-    price: number
-    isLocked: boolean
-    danceAnimation: string
-    runAnimation: string
-    slideAnimation: string
-    stumbleAnimation: string
-    jumpAnimation: string
+  name: string
+  model: string
+  isActive: boolean
+  price: number
+  isLocked: boolean
+  danceAnimation: string
+  runAnimation: string
+  slideAnimation: string
+  stumbleAnimation: string
+  jumpAnimation: string
 }
 
 export default class MainMenuScene extends Scene {
@@ -127,7 +128,56 @@ export default class MainMenuScene extends Scene {
     const username = (document.getElementById('signin-username-text') as HTMLInputElement).value;
     const password = (document.getElementById('signin-password-text') as HTMLInputElement).value;
     const loginData = { username, password };
-    console.log(loginData);
+
+    try {
+      (document.querySelector('#login-button') as HTMLInputElement).innerHTML = 'Logging you in...';
+      (document.querySelector('#login-button') as HTMLInputElement).disabled = true;
+      const response = await fetch('/.netlify/functions/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+      });
+
+      const { token, message } = await response.json();
+      (document.querySelector('#login-button') as HTMLInputElement).innerHTML = 'Login';
+      (document.querySelector('#login-button') as HTMLInputElement).disabled = false;
+      if (token) {
+        localStorage.setItem('token', token);
+        this.closeSignInForm();
+        this.loadLoginScreen();
+        Toastify({
+          text: `Welcome Back, ${username}`,
+          duration: 7000,
+          close: true,
+          gravity: 'bottom',
+          position: 'center',
+          stopOnFocus: true,
+        }).showToast();
+      } else {
+        Toastify({
+          text: `${message}`,
+          duration: 7000,
+          close: true,
+          gravity: 'bottom',
+          position: 'center',
+          stopOnFocus: true,
+        }).showToast();
+      }
+    } catch (error) {
+      (document.querySelector('#login-button') as HTMLInputElement).innerHTML = 'Login';
+      (document.querySelector('#login-button') as HTMLInputElement).disabled = false;
+
+      Toastify({
+        text: `❎❎❎ ${error}`,
+        duration: 3000,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    }
   }
 
   async SignUpUser() {
@@ -135,8 +185,9 @@ export default class MainMenuScene extends Scene {
     const password = (document.getElementById('signup-password-text') as HTMLInputElement).value;
     const repeatPassword = (document.getElementById('signup-repeat-password-text') as HTMLInputElement).value;
     const country = (document.getElementById('country') as HTMLInputElement).value;
-    const signUpData = { username, password, repeatPassword, country };
-    console.log(signUpData);
+    const signUpData = {
+      username, password, repeatPassword, country,
+    };
     if (username.length < 4) {
       Toastify({
         text: '❎ Username is too short!',
@@ -167,6 +218,54 @@ export default class MainMenuScene extends Scene {
         stopOnFocus: true,
       }).showToast();
     }
+    try {
+      (document.querySelector('#register-button') as HTMLInputElement).innerHTML = 'Signing you up...';
+      (document.querySelector('#register-button') as HTMLInputElement).disabled = true;
+      const response = await fetch('/.netlify/functions/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(signUpData),
+      });
+      const { token, message } = await response.json();
+      (document.querySelector('#register-button') as HTMLInputElement).innerHTML = 'Register';
+      (document.querySelector('#register-button') as HTMLInputElement).disabled = false;
+
+      if (token) {
+        localStorage.setItem('token', token);
+        this.closeSignUpForm();
+        this.loadLoginScreen();
+        Toastify({
+          text: 'Registration Successful!',
+          duration: 7000,
+          close: true,
+          gravity: 'bottom',
+          position: 'center',
+          stopOnFocus: true,
+        }).showToast();
+      } else {
+        Toastify({
+          text: `${message}`,
+          duration: 7000,
+          close: true,
+          gravity: 'bottom',
+          position: 'center',
+          stopOnFocus: true,
+        }).showToast();
+      }
+    } catch (error) {
+      Toastify({
+        text: `❎❎❎ ${error}`,
+        duration: 3000,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+      (document.querySelector('#register-button') as HTMLInputElement).innerHTML = 'Signing you up...';
+      (document.querySelector('#register-button') as HTMLInputElement).disabled = false;
+    }
   }
 
   private closeSignUpForm() {
@@ -187,8 +286,22 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'block';
   }
 
-  private async getHighScores() {
+  private async fetchHighScores() {
     (document.querySelector('#high-scores-modal') as HTMLInputElement).style.display = 'block';
+    const response = await fetch('/.netlify/functions/highscores');
+    const { highscores } = await response.json();
+    let tableHead = '<tr><th>Rank</th><th>Username</th><th>Scores</th><th>Country</th></tr>';
+    highscores.forEach((player: {
+      username: string; scores: string; country: string;
+    }, index: number) => {
+      tableHead += `<tr>
+          <td>${index + 1} </td>
+          <td>${player.username}</td>        
+          <td>${player.scores}</td>        
+          <td><span class='fi fi-${player.country}'></span></td>        
+      </tr>`;
+    });
+    (document.getElementById('rank-table') as HTMLInputElement).innerHTML = tableHead;
   }
 
   private closeHighScoreModal() {
@@ -196,18 +309,19 @@ export default class MainMenuScene extends Scene {
   }
 
   async logoutUser() {
-    try {
-      this.loadLogoutScreen();
-    } catch (error) {
-      console.log(error);
-    }
+    localStorage.removeItem('token');
+    this.loadLogoutScreen();
   }
 
   initialize() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.loadLoginScreen();
+    }
+
     (document.querySelector('#main-menu-buttons') as HTMLInputElement).style.display = 'block';
     (document.querySelector('.high-score-container') as HTMLInputElement).style.display = 'block';
     (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'block';
-    (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'block';
 
     (document.querySelector('.high-score') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('highScore')!) || 0;
     (document.querySelector('.total-coins') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('totalCoins')!) || 0;
@@ -222,7 +336,7 @@ export default class MainMenuScene extends Scene {
     if (!this.clock.running) {
       this.clock.start();
     }
-
+    (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'block';
     this.allGameCharacters = (JSON.parse(localStorage.getItem('allGameCharacters')!));
     this.activeIndexNumber = this.allGameCharacters
       .findIndex((character) => character.isActive === true);
@@ -256,7 +370,7 @@ export default class MainMenuScene extends Scene {
       this.displaySignUpForm();
     };
     (document.querySelector('#score-board-button') as HTMLInputElement).onclick = () => {
-      this.getHighScores();
+      this.fetchHighScores();
     };
     (document.querySelector('#close-highscores-modal') as HTMLInputElement).onclick = () => {
       this.closeHighScoreModal();
@@ -284,6 +398,6 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'none';
     this.activeCharacter.visible = false;
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'none';
-    (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'block';
+    (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'none';
   }
 }
