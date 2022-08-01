@@ -473,6 +473,8 @@ export default class RunningScene extends Scene {
     this.currentObstacleTwo.position.z -= 5;
     this.isPlayerHeadStart = false;
     (document.querySelector('.disable-touch') as HTMLInputElement).style.display = 'block';
+    this.saveCoins();
+    this.saveHighScore();
   }
 
   private restartGame() {
