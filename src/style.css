@@ -271,3 +271,9 @@ tr:nth-child(even) {
 #country {
   padding: 8px 0;
 }
+#about-modal{
+  display: none;
+}
+.about-content{
+  text-align: center;
+}
