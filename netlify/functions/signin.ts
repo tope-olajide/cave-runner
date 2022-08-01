@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions';
 import mysql from 'mysql2/promise';
-import querystring from 'querystring';
+// import querystring from 'querystring';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 
@@ -8,21 +8,19 @@ const handler: Handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
-  
+
   try {
     const params = JSON.parse(event.body!);
     const { username, password }: any = params;
-    console.log({ username, password });
     const connection = await mysql.createConnection(process.env.DATABASE_URL);
 
     const [user]:any = await connection.execute(
       'SELECT id, username, password FROM players WHERE username = ?',
       [username.toLowerCase()],
     );
-    console.log(user);
     if (!user.length) {
       return {
-        statusCode: 401, body: 'Account Does Not Exist!', message: 'Account Does Not Exist!',
+        statusCode: 401, body: JSON.stringify({ message: 'Account Does Not Exist!' }),
       };
     }
 
@@ -36,17 +34,16 @@ const handler: Handler = async (event) => {
         process.env.JWT_SECRET,
       );
 
-      console.log(token);
       return {
-        statusCode: 200, body: token,
+        statusCode: 200, body: JSON.stringify({ token }),
       };
     }
 
     return {
-      statusCode: 401, body: 'Invalid Credentials!',
+      statusCode: 401, body: JSON.stringify({ message: 'Invalid Credentials!' }),
     };
   } catch (error) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'Failed fetching data' }) };
+    return { statusCode: 500, body: JSON.stringify({ error: 'Unable to Log in' }) };
   }
 };
 
