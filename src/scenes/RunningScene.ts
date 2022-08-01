@@ -696,17 +696,40 @@ export default class RunningScene extends Scene {
     this.saveHighScore();
   }
 
-  private saveHighScore() {
+  private async saveHighScore() {
     const highScore = localStorage.getItem('high-score') || 0;
     if (Number(this.scores) > Number(highScore)) {
       localStorage.setItem('high-score', this.scores.toString());
     }
+    const token = localStorage.getItem('token');
+    if (token) {
+      await fetch('/.netlify/functions/save-highscore', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: token,
+        },
+        body: JSON.stringify({ scores: highScore }),
+      });
+    }
   }
 
-  private saveCoins() {
+  private async saveCoins() {
     const prevTotalCoins = localStorage.getItem('total-coins') || 0;
     const totalCoins = Number(prevTotalCoins) + this.coins;
     localStorage.setItem('coins', totalCoins.toString());
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      await fetch('/.netlify/functions/save-coins', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: token,
+        },
+        body: JSON.stringify({ coins: totalCoins }),
+      });
+    }
   }
 
   /*
