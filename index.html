@@ -61,10 +61,10 @@
       <span class="btn-icon"><i class="fa-solid fa-play"></i></span> Play
     </button>
     <button class="btn" id="Characters-selection-button">
-      <span class="btn-icon"><i class="fa-solid fa-users"></i></span>Characters
+      <span class="btn-icon"><i class="fa-solid fa-users"></i></span> Characters
     </button>
-    <button class="btn">
-      <span class="btn-icon"><i class="fa-solid fa-gear"></i></span>About
+    <button class="btn" id="about-button">
+      <span class="btn-icon"><i class="fa-solid fa-info"></i></span> About
     </button>
   </section>
 
@@ -424,10 +424,24 @@
           <i class="fas fa-sync fa-spin"></i>
         </div>
       </h3> -->
-        
       </table>
-
     </div>
+  </div>
+  <div id="about-modal" class="modal">
+    <div class="modal-body">
+      <div class="about-content">
+        <h2>About Cave Runner</h2>
+        <p>Cave Runner is an Endless Runner Game built with Threejs, Netlify and PlanetScale</p>
+        <p>It is my sumbision for the <a href ="https://hashnode.com/n/planetscalehackathon">PlanetScale Hackathon on Hashnode</a> </p>
+        <p>Code is freely available on <a href="https://github.com/tope-olajide/cave-runner">GitHub</a></p>
+      <button class="btn" id="close-about-btn">
+        <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
+        Close
+      </button>
+      </div>
+      
+    </div>
+    
   </div>
   <div class="loading-container">
     <img src="./assets/images/loader.gif" />

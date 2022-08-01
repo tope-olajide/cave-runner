@@ -114,6 +114,14 @@ export default class MainMenuScene extends Scene {
     this.hide();
   }
 
+  private displayAboutModal() {
+    (document.querySelector('#about-modal') as HTMLInputElement).style.display = 'block';
+  }
+
+  private hideAboutModal() {
+    (document.querySelector('#about-modal') as HTMLInputElement).style.display = 'none';
+  }
+
   private displaySignUpForm() {
     (document.querySelector('#sign-in-modal') as HTMLInputElement).style.display = 'none';
     (document.querySelector('#sign-up-modal') as HTMLInputElement).style.display = 'block';
@@ -329,6 +337,13 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('.auth-button') as HTMLInputElement).onclick = () => {
       this.displaySignUpForm();
     };
+    (document.querySelector('#about-button') as HTMLInputElement).onclick = () => {
+      this.displayAboutModal();
+    };
+
+    (document.querySelector('#close-about-btn') as HTMLInputElement).onclick = () => {
+      this.hideAboutModal();
+    };
 
     if (!this.visible) {
       this.visible = true;
@@ -399,5 +414,6 @@ export default class MainMenuScene extends Scene {
     this.activeCharacter.visible = false;
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'none';
     (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('#sign-out-button') as HTMLInputElement).style.display = 'none';
   }
 }
