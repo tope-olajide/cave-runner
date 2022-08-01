@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions';
 import mysql from 'mysql2/promise';
-import querystring from 'querystring';
+// import querystring from 'querystring';
 import authenticateToken from './authenticateToken';
 
 require('dotenv').config();
@@ -10,7 +10,7 @@ const handler: Handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
   const token = event.headers.authorization;
-  const params = querystring.parse(event.body!);
+  const params = JSON.parse(event.body!);
   const { coins }: any = params;
 
   const user = authenticateToken(token);

@@ -719,7 +719,7 @@ export default class RunningScene extends Scene {
   private async saveCoins() {
     const prevTotalCoins = localStorage.getItem('total-coins') || 0;
     const totalCoins = Number(prevTotalCoins) + this.coins;
-    localStorage.setItem('coins', totalCoins.toString());
+    localStorage.setItem('total-coins', totalCoins.toString());
 
     const token = localStorage.getItem('token');
     if (token) {
