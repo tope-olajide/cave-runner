@@ -1,10 +1,8 @@
-/* eslint-disable linebreak-style */
 import { WebGLRenderer, PerspectiveCamera } from 'three';
 
 import RunningScene from './scenes/RunningScene';
 import MainMenuScene from './scenes/MainMenuScene';
 import CharacterSelectionScene from './scenes/CharacterSelectionScene';
-
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -50,7 +48,7 @@ const switchToCharacterSelectionScene = () => {
   currentScene.hide();
   currentScene = characterSelectionScene;
   currentScene.initialize();
-}
+};
 (document.getElementById('play-game-button')as HTMLInputElement).onclick = () => {
   switchToRunningScene();
 };
