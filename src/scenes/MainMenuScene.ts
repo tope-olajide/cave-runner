@@ -322,9 +322,11 @@ export default class MainMenuScene extends Scene {
   }
 
   initialize() {
+    (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'block';
     const token = localStorage.getItem('token');
     if (token) {
       this.loadLoginScreen();
+      (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'none';
     }
 
     (document.querySelector('#main-menu-buttons') as HTMLInputElement).style.display = 'block';
@@ -366,7 +368,7 @@ export default class MainMenuScene extends Scene {
       .clipAction(this.activeCharacterAnimation.animations[0]);
     this.dancingAnimation.play();
 
-    (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'block';
+
 
     (document.querySelector('#close-signup-form') as HTMLInputElement).onclick = () => {
       this.closeSignUpForm();

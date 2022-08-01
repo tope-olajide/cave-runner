@@ -702,17 +702,17 @@ export default class RunningScene extends Scene {
     const highScore = localStorage.getItem('high-score') || 0;
     if (Number(this.scores) > Number(highScore)) {
       localStorage.setItem('high-score', this.scores.toString());
-    }
-    const token = localStorage.getItem('token');
-    if (token) {
-      await fetch('/.netlify/functions/save-highscore', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: token,
-        },
-        body: JSON.stringify({ scores: highScore }),
-      });
+      const token = localStorage.getItem('token');
+      if (token) {
+        await fetch('/.netlify/functions/save-highscore', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: token,
+          },
+          body: JSON.stringify({ scores: highScore }),
+        });
+      }
     }
   }
 
