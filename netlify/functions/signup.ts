@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions';
 import mysql from 'mysql2/promise';
-import querystring from 'querystring';
+// import querystring from 'querystring';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 
@@ -10,8 +10,7 @@ const handler: Handler = async (event) => {
   }
   const params = JSON.parse(event.body!);
   const { username, password, country }: any = params;
-  console.log({ username, password, country });
-  if (!username || username.length < 4) {
+  if (!username || username.length < 3) {
     return {
       statusCode: 400, body: 'your username is too short',
     };
@@ -54,7 +53,6 @@ const handler: Handler = async (event) => {
       statusCode: 200, body: JSON.stringify({ token }),
     };
   } catch (error) {
-    console.log(error);
     return { statusCode: 500, body: JSON.stringify({ error: 'Failed fetching data' }) };
   }
 };
