@@ -285,5 +285,6 @@ export default class MainMenuScene extends Scene {
     this.activeCharacter.visible = false;
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'none';
     (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'block';
+    (document.querySelector('#sign-out-button') as HTMLInputElement).style.display = 'none';
   }
 }
