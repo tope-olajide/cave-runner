@@ -36,7 +36,7 @@ To start the game, without setting up the serverlss functions run the following 
 npm run dev
 ```
 
-Starting the game with Netlify CLI and Connecting to PlanetScale
+# Starting the game with Netlify CLI and Connecting to PlanetScale
 
 ### Create a new database
 - Signup for a new Account at [planetscale.com](https://planetscale.com)
@@ -73,9 +73,64 @@ JWT_SECRET=add-your-jwt-secret-here
 
 ## Installing the Netlify's CLI
 
-We will use the Netlify CLI to test our serverless functions, run the project locally, and deploy to the server.
+You need the Netlify CLI to test the serverless functions, run the project locally, and deploy to the server.
 
-Install the CLI by running the following Command:
+Install the Netlify CLI by running the following Command:
 ``` bash
 npm install netlify-cli --global
 ```
+Once Netlify has been installed, use the following command to login to your Netlify account, or create one if you don't have
+
+``` bash
+netlify login
+```
+Run the following command to connect the project with Netlify:
+
+``` bash
+netlify init
+```
+Finally, to start locally on your system run the following command:
+
+```bash
+netlify dev
+```
+
+This will launch the game on `localhost:8888`.
+
+If you need to do more with the Netlify CLI,  [you can visit their docs for more information](https://docs.netlify.com/cli/get-started/).
+
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+
+## Contact
+
+Temitope Olajide - [@your_twitter](https://twitter.com/your_username) - temitope_olajide@outlook.com
+
+Project Link: [cave-runner.netlify.app](https://cave-runner.netlify.app)
+
+
+## Acknowledgments
+
+* [threejs](https:threejs.org)
+* [hashnode](https://hashnode.com)
+* [PlanetScale](https://planetscale.com)
+* [netlify](https://netlify.app)
+* [TypeScript](https://www.typescriptlang.org/)
+* [GitHub Pages](https://pages.github.com)
+* [Font Awesome](https://fontawesome.com)
