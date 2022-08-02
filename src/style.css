@@ -277,3 +277,11 @@ tr:nth-child(even) {
 .about-content{
   text-align: center;
 }
+.auto-save-loader{
+  position: absolute;
+  color: white;
+  bottom: 0;
+  right: 0;
+  margin: 80px 50px;
+  display: none;
+}
