@@ -710,7 +710,7 @@ export default class RunningScene extends Scene {
             'Content-Type': 'application/json',
             authorization: token,
           },
-          body: JSON.stringify({ scores: highScore }),
+          body: JSON.stringify({ scores: this.scores }),
         });
       }
     }
