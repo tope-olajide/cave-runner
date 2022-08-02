@@ -704,14 +704,20 @@ export default class RunningScene extends Scene {
       localStorage.setItem('high-score', this.scores.toString());
       const token = localStorage.getItem('token');
       if (token) {
-        await fetch('/.netlify/functions/save-highscore', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: token,
-          },
-          body: JSON.stringify({ scores: this.scores }),
-        });
+        try {
+          (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'block';
+          await fetch('/.netlify/functions/save-highscore', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              authorization: token,
+            },
+            body: JSON.stringify({ scores: this.scores }),
+          });
+          (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
+        } catch (error) {
+          (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
+        }
       }
     }
   }
@@ -723,14 +729,20 @@ export default class RunningScene extends Scene {
 
     const token = localStorage.getItem('token');
     if (token) {
-      await fetch('/.netlify/functions/save-coins', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: token,
-        },
-        body: JSON.stringify({ coins: totalCoins }),
-      });
+      (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'block';
+      try {
+        await fetch('/.netlify/functions/save-coins', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: token,
+          },
+          body: JSON.stringify({ coins: totalCoins }),
+        });
+        (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
+      } catch (error) {
+        (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
+      }
     }
   }
 
