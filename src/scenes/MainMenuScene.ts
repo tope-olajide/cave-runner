@@ -194,7 +194,7 @@ export default class MainMenuScene extends Scene {
     const repeatPassword = (document.getElementById('signup-repeat-password-text') as HTMLInputElement).value;
     const country = (document.getElementById('country') as HTMLInputElement).value;
     const signUpData = {
-      username, password, repeatPassword, country,
+      username, password, country,
     };
     if (username.length < 4) {
       Toastify({
@@ -367,8 +367,6 @@ export default class MainMenuScene extends Scene {
     this.dancingAnimation = this.animationMixer
       .clipAction(this.activeCharacterAnimation.animations[0]);
     this.dancingAnimation.play();
-
-
 
     (document.querySelector('#close-signup-form') as HTMLInputElement).onclick = () => {
       this.closeSignUpForm();

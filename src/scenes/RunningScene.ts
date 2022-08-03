@@ -5,7 +5,7 @@ import {
 } from 'three';
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-
+import Toastify from 'toastify-js';
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 import allCharacters from '../allCharacters';
 
@@ -706,7 +706,7 @@ export default class RunningScene extends Scene {
       if (token) {
         try {
           (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'block';
-          await fetch('/.netlify/functions/save-highscore', {
+          const response = await fetch('/.netlify/functions/save-highscore', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -715,6 +715,17 @@ export default class RunningScene extends Scene {
             body: JSON.stringify({ scores: this.scores }),
           });
           (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
+          if (response.status === 401) {
+            Toastify({
+              text: 'Your session has expired. Please relogin',
+              duration: 5000,
+              close: true,
+              gravity: 'bottom',
+              position: 'center',
+              stopOnFocus: true,
+            }).showToast();
+            localStorage.removeItem('token');
+          }
         } catch (error) {
           (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
         }
@@ -731,7 +742,7 @@ export default class RunningScene extends Scene {
     if (token) {
       (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'block';
       try {
-        await fetch('/.netlify/functions/save-coins', {
+        const response = await fetch('/.netlify/functions/save-coins', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -740,6 +751,17 @@ export default class RunningScene extends Scene {
           body: JSON.stringify({ coins: totalCoins }),
         });
         (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
+        if (response.status === 401) {
+          Toastify({
+            text: 'Your session has expired. Please relogin',
+            duration: 5000,
+            close: true,
+            gravity: 'bottom',
+            position: 'center',
+            stopOnFocus: true,
+          }).showToast();
+          localStorage.removeItem('token');
+        }
       } catch (error) {
         (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
       }
