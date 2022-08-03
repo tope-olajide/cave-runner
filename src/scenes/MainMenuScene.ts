@@ -368,8 +368,6 @@ export default class MainMenuScene extends Scene {
       .clipAction(this.activeCharacterAnimation.animations[0]);
     this.dancingAnimation.play();
 
-
-
     (document.querySelector('#close-signup-form') as HTMLInputElement).onclick = () => {
       this.closeSignUpForm();
     };

@@ -12,7 +12,7 @@ const handler: Handler = async (event) => {
   const token = event.headers.authorization;
   const params = JSON.parse(event.body!);
   const { scores }: any = params;
-  
+
   const user = authenticateToken(token);
   if (!user) {
     return { statusCode: 401, body: 'Failed to authenticate token.' };
