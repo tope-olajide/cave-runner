@@ -164,6 +164,8 @@ export default class RunningScene extends Scene {
     this.woodenCave.position.set(0, 0, -500);
     this.woodenCave.scale.set(0.055, 0.055, 0.055);
     this.add(this.woodenCave);
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '5%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 5;
 
     this.woodenCaveClone = this.woodenCave.clone();
     const caveBox = new Box3().setFromObject(this.woodenCave);
@@ -174,7 +176,8 @@ export default class RunningScene extends Scene {
     this.barrelObject = await this.fbxLoader.loadAsync('../../assets/models/barrel.fbx');
     this.boxObject = await this.fbxLoader.loadAsync('../../assets/models/box.fbx');
     this.spikeObject = await this.fbxLoader.loadAsync('../../assets/models/spike.fbx');
-
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '10%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 10;
     this.createLeftJumpObstacle();
 
     this.createLeftJumpObstacle();
@@ -199,7 +202,8 @@ export default class RunningScene extends Scene {
 
     this.coinObject = await this.fbxLoader.loadAsync('../../assets/models/coin.fbx');
     this.coinObject.rotation.set(90 * (Math.PI / 180), 0, 150 * (Math.PI / 180));
-
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '12%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 12;
     this.generateLeftCenterRightCoins();
 
     this.generateLeftSideCoin();
@@ -231,38 +235,84 @@ export default class RunningScene extends Scene {
     this.allGameCharacters = (JSON.parse(localStorage.getItem('allGameCharacters')!));
 
     this.xbot = await this.fbxLoader.loadAsync(this.allGameCharacters[0].model);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '13%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 13;
+
     this.xbotRunningAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[0]
       .runAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '14%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 14;
+
     this.xbotJumpingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[0]
       .jumpAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '15%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 15;
+
     this.xbotSlidingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[0]
       .slideAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '16%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 16;
+
     this.xbotStumbleAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[0]
       .stumbleAnimation);
     this.xbotSlidingAnimation.animations[0].tracks.shift();
 
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '17%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 17;
+
     this.jolleen = await this.fbxLoader.loadAsync(this.allGameCharacters[1].model);
     this.jolleenRunningAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[1]
       .runAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '18%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 18;
+
     this.jolleenJumpingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[1]
       .jumpAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '19%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 19;
+
     this.jolleenSlidingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[1]
       .slideAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '20%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 20;
+
     this.jolleenStumbleAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[1]
       .stumbleAnimation);
     this.jolleenSlidingAnimation.animations[0].tracks.shift();
 
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '21%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 21;
+
     this.peasantGirl = await this.fbxLoader.loadAsync(this.allGameCharacters[2].model);
     this.peasantGirlRunningAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[2]
       .runAnimation);
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '22%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 22;
+
     this.peasantGirlJumpingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[2]
       .jumpAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '23%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 23;
+
     this.peasantGirlSlidingAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[2]
       .slideAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '24%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 24;
+
     this.peasantGirlStumbleAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[2]
       .stumbleAnimation);
     this.peasantGirlSlidingAnimation.animations[0].tracks.shift();
-
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '25%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 25;
     this.xbot.visible = false;
     this.jolleen.visible = false;
     this.peasantGirl.visible = false;

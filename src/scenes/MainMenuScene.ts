@@ -67,6 +67,9 @@ export default class MainMenuScene extends Scene {
     this.woodenCave.scale.set(0.055, 0.055, 0.055);
     this.add(this.woodenCave);
 
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '27%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 27;
+
     const ambient = new AmbientLight(0xFFFFFF, 2.5);
     this.add(ambient);
 
@@ -85,13 +88,26 @@ export default class MainMenuScene extends Scene {
     this.jolleen = await this.fbxLoader.loadAsync(this.allGameCharacters[1].model);
     this.peasantGirl = await this.fbxLoader.loadAsync(this.allGameCharacters[2].model);
 
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '32%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 32;
+
     this.xbotAnimation = await this.fbxLoader
       .loadAsync(this.allGameCharacters[0].danceAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '34%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 37;
+
     this.jolleenAnimation = await this.fbxLoader
       .loadAsync(this.allGameCharacters[1].danceAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '39%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 39;
     this.peasantGirlAnimation = await this.fbxLoader
       .loadAsync(this.allGameCharacters[2].danceAnimation);
 
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '42%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 42;
+    
     this.xbot.visible = false;
     this.jolleen.visible = false;
     this.peasantGirl.visible = false;
@@ -246,7 +262,7 @@ export default class MainMenuScene extends Scene {
         this.loadLoginScreen();
         Toastify({
           text: 'Registration Successful!',
-          duration: 7000,
+          duration: 4000,
           close: true,
           gravity: 'bottom',
           position: 'center',
@@ -255,7 +271,7 @@ export default class MainMenuScene extends Scene {
       } else {
         Toastify({
           text: `${message}`,
-          duration: 7000,
+          duration: 4000,
           close: true,
           gravity: 'bottom',
           position: 'center',
