@@ -194,7 +194,7 @@ export default class MainMenuScene extends Scene {
     const repeatPassword = (document.getElementById('signup-repeat-password-text') as HTMLInputElement).value;
     const country = (document.getElementById('country') as HTMLInputElement).value;
     const signUpData = {
-      username, password, repeatPassword, country,
+      username, password, country,
     };
     if (username.length < 4) {
       Toastify({
