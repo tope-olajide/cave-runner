@@ -123,11 +123,27 @@ margin: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.loading-container img{
-  width: 200px;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.993);
+
 }
 
+#loading-bar{
+color: #BA4D31;
+  height: 5px;
+  border-radius: 10px;
+  border: 1px solid rgb(22, 21, 20);
+}
+
+.loading-text{
+  color: #BA4D31;
+  font-size: 1.8rem;
+}
+.loading-percentage{
+  font-size: 4rem;
+  color: white;
+  font-weight: 900;
+}
 /* Main Menu buttons */
 #main-menu-buttons {
   position: absolute;

@@ -62,6 +62,9 @@ export default class CharacterSelectionScene extends Scene {
     this.woodenCave.scale.set(0.055, 0.055, 0.055);
     this.add(this.woodenCave);
 
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '50%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 50;
+
     const ambient = new AmbientLight(0xFFFFFF, 2.5);
     this.add(ambient);
 
@@ -77,12 +80,29 @@ export default class CharacterSelectionScene extends Scene {
     this.allGameCharacters = (JSON.parse(localStorage.getItem('allGameCharacters') !));
 
     this.xbot = await this.fbxLoader.loadAsync(this.allGameCharacters[0].model);
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '60%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 60;
+
     this.jolleen = await this.fbxLoader.loadAsync(this.allGameCharacters[1].model);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '70%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 70;
+
     this.peasantGirl = await this.fbxLoader.loadAsync(this.allGameCharacters[2].model);
 
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '80%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 80;
+
     this.xbotAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[0].danceAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '90%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 90;
     this.jolleenAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[1]
       .danceAnimation);
+
+    (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '100%';
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 100;
+
     this.peasantGirlAnimation = await this.fbxLoader.loadAsync(this.allGameCharacters[2]
       .danceAnimation);
 
