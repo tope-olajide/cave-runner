@@ -293,6 +293,7 @@ export default class RunningScene extends Scene {
       this.jolleenStumbleAnimation,
       this.peasantGirlStumbleAnimation,
     );
+    this.hide();
   }
 
   initialize() {
