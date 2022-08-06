@@ -322,7 +322,7 @@ export default class MainMenuScene extends Scene {
           <td>${index + 1} </td>
           <td>${player.username}</td>        
           <td>${player.scores}</td>        
-          <td><span class='fi fi-${player.country}'></span></td>        
+          <td><span class='fi fi-${player.country.toLowerCase()}'></span></td>        
       </tr>`;
     });
     (document.getElementById('rank-table') as HTMLInputElement).innerHTML = tableHead;
