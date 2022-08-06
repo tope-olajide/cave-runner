@@ -1,78 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-    <title>Cave Runner</title>
-  </head>
 
-  <body>
-    <div class="coins-container">
-      <h3>Coins: <span class="coins-count">0</span></h3>
-    </div>
-    <div class="scores-container">
-      <h3>Scores: <span class="scores-count">0</span></h3>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./src/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <title>Cave Runner</title>
+</head>
 
-    <div class="pause-button">
-      <button class="btn-icon-only">
-        <span class="btn-icon"><i class="fa-solid fa-pause"></i></span>
+<body>
+  <div class="coins-container">
+    <h3>Coins: <span class="coins-count">0</span></h3>
+  </div>
+  <div class="scores-container">
+    <h3>Scores: <span class="scores-count">0</span></h3>
+  </div>
+
+  <div class="pause-button">
+    <button class="btn-icon-only">
+      <span class="btn-icon"><i class="fa-solid fa-pause"></i></span>
+    </button>
+  </div>
+
+  <div id="game-paused-modal" class="modal">
+    <div class="modal-body" id="">
+      <br />
+      <h1>Game Paused!</h1>
+      <br />
+      <button class="btn" id="resume-button">
+        <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
+        Resume</button><br />
+      <button class="btn" id="quit-button">
+        <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
+        Quit Game</button><br />
+    </div>
+  </div>
+
+  <div id="game-over-modal" class="modal">
+    <div class="modal-body" id="game-over-modal">
+      <h1>Game Over</h1>
+      <p>Your Scores:<span id="current-score"></span></p>
+      <p>Coins:<span id="current-coins"></span></p>
+      <button class="btn" id="restart-button">
+        <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
+        Restart
+      </button>
+      <button class="btn" id="game-over-quit-button">
+        <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
+        Quit Game
       </button>
     </div>
+  </div>
 
-    <div id="game-paused-modal" class="modal">
-      <div class="modal-body" id="">
-        <br />
-        <h1>Game Paused!</h1>
-        <br />
-        <button class="btn" id="resume-button">
-          <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
-          Resume</button
-        ><br />
-        <button class="btn" id="quit-button">
-          <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
-          Quit Game</button
-        ><br />
-      </div>
-    </div>
-
-    <div id="game-over-modal" class="modal">
-      <div class="modal-body" id="game-over-modal">
-        <h1>Game Over</h1>
-        <p>Your Scores:<span id="current-score"></span></p>
-        <p>Coins:<span id="current-coins"></span></p>
-        <button class="btn" id="restart-button">
-          <span class="btn-icon"><i class="fa-solid fa-refresh"></i></span>
-          Restart
-        </button>
-        <button class="btn" id="game-over-quit-button">
-          <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
-          Quit Game
-        </button>
-      </div>
-    </div>
-
-    <!-- Main menu buttons  -->
-<section id="main-menu-buttons">
-  <button id="play-game-button" class="btn">
-    <span class="btn-icon"><i class="fa-solid fa-play"></i></span
-    > Play
-  </button>
-  <button class="btn" id="Characters-selection-button">
-    <span class="btn-icon"><i class="fa-solid fa-users"></i></span
-    >Characters
-  </button>
-  <button class="btn">
-    <span class="btn-icon"><i class="fa-solid fa-gear"></i></span
-    >Settings
-  </button>
-</section>
+  <!-- Main menu buttons  -->
+  <section id="main-menu-buttons">
+    <button id="play-game-button" class="btn">
+      <span class="btn-icon"><i class="fa-solid fa-play"></i></span> Play
+    </button>
+    <button class="btn" id="Characters-selection-button">
+      <span class="btn-icon"><i class="fa-solid fa-users"></i></span>Characters
+    </button>
+    <button class="btn">
+      <span class="btn-icon"><i class="fa-solid fa-gear"></i></span>Settings
+    </button>
+  </section>
 
   <!--Character Selection Section -->
   <div class="home-menu">
@@ -103,18 +96,23 @@
     </section>
   </div>
 
-<!-- Coins and Highscores section -->
-<div class="high-score-container"><h3>High Score: <span class="high-score">0</span> </h3></div>
-<div class="total-coins-container"><h3> Total Coins: <span class="total-coins">0</span></h3></div>
+  <!-- Coins and Highscores section -->
+  <div class="high-score-container">
+    <h3>High Score: <span class="high-score">0</span> </h3>
+  </div>
+  <div class="total-coins-container">
+    <h3> Total Coins: <span class="total-coins">0</span></h3>
+  </div>
 
 
-    <div class="loading-container">
-      <img src="./public/assets/images/loader.gif" />
-    </div>
-    <div class="disable-touch"></div>
-    <div></div>
-    <canvas id="app"> </canvas>
+  <div class="loading-container">
+    <img src="./public/assets/images/loader.gif" />
+  </div>
+  <div class="disable-touch"></div>
+  <div></div>
+  <canvas id="app"> </canvas>
 
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>

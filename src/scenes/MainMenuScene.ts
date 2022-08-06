@@ -115,8 +115,8 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('.high-score-container') as HTMLInputElement).style.display = 'block';
     (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'block';
 
-    (document.querySelector('.high-score') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('highScore')!) || 0;
-    (document.querySelector('.total-coins') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('totalCoins')!) || 0;
+    (document.querySelector('.high-score') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('high-score')!) || 0;
+    (document.querySelector('.total-coins') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('total-coins')!) || 0;
 
     if (!this.visible) {
       this.visible = true;

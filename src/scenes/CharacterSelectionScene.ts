@@ -152,11 +152,11 @@ export default class CharacterSelectionScene extends Scene {
 
   purchaseCharacter() {
     const savedPlayerData = JSON.parse(localStorage.getItem('allGameCharacters')!);
-    const totalCoins = Number(localStorage.getItem('totalCoins')) || 10000;
+    const totalCoins = Number(localStorage.getItem('total-coins'));
     if (totalCoins >= this.allGameCharacters[this.activeIndexNumber].price) {
       const remainingCoins = totalCoins - Number(this.allGameCharacters[this.activeIndexNumber]
         .price);
-      localStorage.setItem('totalCoins', remainingCoins.toString()!);
+      localStorage.setItem('total-coins', remainingCoins.toString()!);
       savedPlayerData[this.activeIndexNumber].isLocked = false;
       savedPlayerData[this.activeIndexNumber].price = 0;
       this.activateCharacter();
@@ -175,6 +175,17 @@ export default class CharacterSelectionScene extends Scene {
       .clipAction(this.activeCharacterAnimation.animations[0]);
     this.dancingAnimation.play();
 
+    (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'block';
+    (document.querySelector('#character-selection-container') as HTMLInputElement).style.display = 'block';
+    (document.querySelector('.home-menu') as HTMLInputElement).style.display = 'block';
+
+    if (!this.visible) {
+      this.visible = true;
+    }
+
+    if (!this.clock.running) {
+      this.clock.start();
+    }
     (document.getElementById('next-btn') as HTMLInputElement).onclick = () => {
       this.nextCharacter();
     };
@@ -191,17 +202,8 @@ export default class CharacterSelectionScene extends Scene {
       this.activateCharacter();
     };
 
-    (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'block';
-    (document.querySelector('#character-selection-container') as HTMLInputElement).style.display = 'block';
-    (document.querySelector('.home-menu') as HTMLInputElement).style.display = 'block';
 
-    if (!this.visible) {
-      this.visible = true;
-    }
 
-    if (!this.clock.running) {
-      this.clock.start();
-    }
   }
 
   update() {
@@ -210,9 +212,6 @@ export default class CharacterSelectionScene extends Scene {
       this.animationMixer.update(this.delta);
     }
 
-    (document.querySelector('.home-menu') as HTMLInputElement).style.display = 'block';
-    (document.querySelector('.pause-button') as HTMLInputElement).style.display = 'none';
-    (document.querySelector('#character-selection-container') as HTMLInputElement).style.display = 'block';
     (document.querySelector('.character-name') as HTMLInputElement).innerHTML = this.allGameCharacters[this.activeIndexNumber].name;
 
     if (this.allGameCharacters[this.activeIndexNumber].isLocked) {

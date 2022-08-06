@@ -293,7 +293,6 @@ export default class RunningScene extends Scene {
       this.jolleenStumbleAnimation,
       this.peasantGirlStumbleAnimation,
     );
-    this.hide();
   }
 
   initialize() {
@@ -376,9 +375,6 @@ export default class RunningScene extends Scene {
     }
 
     if (!this.clock.running) {
-      /*       this.currentAnimation = this.runningAnimation;
-      this.currentAnimation.reset();
-      this.currentAnimation.play(); */
       this.clock.start();
       this.speed = 220;
       this.player.position.x = 0;
@@ -473,6 +469,8 @@ export default class RunningScene extends Scene {
     this.currentObstacleTwo.position.z -= 5;
     this.isPlayerHeadStart = false;
     (document.querySelector('.disable-touch') as HTMLInputElement).style.display = 'block';
+    this.saveCoins();
+    this.saveHighScore();
   }
 
   private restartGame() {
@@ -706,7 +704,7 @@ export default class RunningScene extends Scene {
   private saveCoins() {
     const prevTotalCoins = localStorage.getItem('total-coins') || 0;
     const totalCoins = Number(prevTotalCoins) + this.coins;
-    localStorage.setItem('coins', totalCoins.toString());
+    localStorage.setItem('total-coins', totalCoins.toString());
   }
 
   /*
