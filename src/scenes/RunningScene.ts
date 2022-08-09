@@ -9,18 +9,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 import allCharacters from '../allCharacters';
 
-interface IallGameCharacters {
-  name: string
-  model: string
-  isActive: boolean
-  price: number
-  isLocked: boolean
-  danceAnimation: string
-  runAnimation: string
-  slideAnimation: string
-  stumbleAnimation: string
-  jumpAnimation: string
-}
+import { IallGameCharacters } from '../types';
 
 export default class RunningScene extends Scene {
   private fbxLoader = new FBXLoader();
@@ -440,8 +429,7 @@ export default class RunningScene extends Scene {
     this.currentObstacleTwo.position.z = -1500;
 
     this.activeCoinsGroup.position.z = -1200;
-    this.currentAnimation.stop();
-    this.player.visible = false;
+    
     this.clock.stop();
     this.player.rotation.x = 0;
   }

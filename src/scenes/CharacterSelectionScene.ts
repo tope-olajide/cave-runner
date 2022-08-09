@@ -6,18 +6,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
 import allCharacters from '../allCharacters';
 
-interface IallGameCharacters {
-    name: string
-    model: string
-    isActive: boolean
-    price: number
-    isLocked: boolean
-    danceAnimation: string
-    runAnimation: string
-    slideAnimation: string
-    stumbleAnimation: string
-    jumpAnimation: string
-}
+import { IallGameCharacters } from '../types';
 
 export default class CharacterSelectionScene extends Scene {
   private fbxLoader = new FBXLoader();
@@ -117,6 +106,7 @@ export default class CharacterSelectionScene extends Scene {
       this.dancingAnimation = this.animationMixer
         .clipAction(this.activeCharacterAnimation.animations[0]);
       this.dancingAnimation.play();
+      (document.querySelector('.character-name') as HTMLInputElement).innerHTML = this.allGameCharacters[this.activeIndexNumber].name;
     }
   }
 
@@ -133,6 +123,7 @@ export default class CharacterSelectionScene extends Scene {
       this.dancingAnimation = this.animationMixer
         .clipAction(this.activeCharacterAnimation.animations[0]);
       this.dancingAnimation.play();
+      (document.querySelector('.character-name') as HTMLInputElement).innerHTML = this.allGameCharacters[this.activeIndexNumber].name;
     }
   }
 
@@ -178,7 +169,7 @@ export default class CharacterSelectionScene extends Scene {
     (document.querySelector('.total-coins-container') as HTMLInputElement).style.display = 'block';
     (document.querySelector('#character-selection-container') as HTMLInputElement).style.display = 'block';
     (document.querySelector('.home-menu') as HTMLInputElement).style.display = 'block';
-
+    (document.querySelector('.character-name') as HTMLInputElement).innerHTML = this.allGameCharacters[this.activeIndexNumber].name;
     if (!this.visible) {
       this.visible = true;
     }
@@ -202,8 +193,6 @@ export default class CharacterSelectionScene extends Scene {
       this.activateCharacter();
     };
 
-
-
   }
 
   update() {
@@ -212,7 +201,7 @@ export default class CharacterSelectionScene extends Scene {
       this.animationMixer.update(this.delta);
     }
 
-    (document.querySelector('.character-name') as HTMLInputElement).innerHTML = this.allGameCharacters[this.activeIndexNumber].name;
+    
 
     if (this.allGameCharacters[this.activeIndexNumber].isLocked) {
       (document.getElementById('select-character-btn') as HTMLInputElement).style.display = 'none';
