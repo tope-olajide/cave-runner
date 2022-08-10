@@ -9,18 +9,7 @@ import Toastify from 'toastify-js';
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 import allCharacters from '../allCharacters';
 
-interface IallGameCharacters {
-  name: string
-  model: string
-  isActive: boolean
-  price: number
-  isLocked: boolean
-  danceAnimation: string
-  runAnimation: string
-  slideAnimation: string
-  stumbleAnimation: string
-  jumpAnimation: string
-}
+import { IallGameCharacters } from '../types';
 
 export default class RunningScene extends Scene {
   private fbxLoader = new FBXLoader();
@@ -766,14 +755,6 @@ export default class RunningScene extends Scene {
           });
           (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
           if (response.status === 401) {
-            Toastify({
-              text: 'Your session has expired. Please relogin',
-              duration: 5000,
-              close: true,
-              gravity: 'bottom',
-              position: 'center',
-              stopOnFocus: true,
-            }).showToast();
             localStorage.removeItem('token');
           }
         } catch (error) {

@@ -29,6 +29,7 @@
     "flag-icons": "^6.6.4",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
+    "netlify-cli": "^10.15.0",
     "three": "^0.142.0",
     "toastify-js": "^1.12.0"
   }

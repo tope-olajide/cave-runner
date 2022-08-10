@@ -11,18 +11,7 @@ import allCharacters from '../allCharacters';
 
 import 'flag-icons';
 
-interface IallGameCharacters {
-  name: string
-  model: string
-  isActive: boolean
-  price: number
-  isLocked: boolean
-  danceAnimation: string
-  runAnimation: string
-  slideAnimation: string
-  stumbleAnimation: string
-  jumpAnimation: string
-}
+import { IallGameCharacters } from '../types';
 
 export default class MainMenuScene extends Scene {
   private fbxLoader = new FBXLoader();

@@ -6,18 +6,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
 import allCharacters from '../allCharacters';
 
-interface IallGameCharacters {
-    name: string
-    model: string
-    isActive: boolean
-    price: number
-    isLocked: boolean
-    danceAnimation: string
-    runAnimation: string
-    slideAnimation: string
-    stumbleAnimation: string
-    jumpAnimation: string
-}
+import { IallGameCharacters } from '../types';
 
 export default class CharacterSelectionScene extends Scene {
   private fbxLoader = new FBXLoader();
@@ -168,6 +157,7 @@ export default class CharacterSelectionScene extends Scene {
     });
     localStorage.setItem('allGameCharacters', JSON.stringify(updatedPlayerData));
     this.allGameCharacters = updatedPlayerData;
+    
   }
 
   purchaseCharacter() {
