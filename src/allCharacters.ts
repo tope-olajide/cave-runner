@@ -14,7 +14,7 @@ export default [{
   name: 'Jolleen',
   model: '../assets/characters/jolleen.fbx',
   isActive: false,
-  price: 2000,
+  price: 200,
   isLocked: true,
   danceAnimation: '../assets/animations/jolleen@dancing.fbx',
   runAnimation: '../assets/animations/jolleen@running.fbx',
