@@ -299,6 +299,7 @@ tr:nth-child(even) {
 }
 #about-modal{
   display: none;
+  padding-top: 50px;
 }
 .about-content{
   text-align: center;
