@@ -157,16 +157,16 @@ export default class CharacterSelectionScene extends Scene {
     });
     localStorage.setItem('allGameCharacters', JSON.stringify(updatedPlayerData));
     this.allGameCharacters = updatedPlayerData;
-    
+
   }
 
   purchaseCharacter() {
     const savedPlayerData = JSON.parse(localStorage.getItem('allGameCharacters')!);
-    const totalCoins = Number(localStorage.getItem('totalCoins')) || 10000;
+    const totalCoins = Number(localStorage.getItem('total-coins'));
     if (totalCoins >= this.allGameCharacters[this.activeIndexNumber].price) {
       const remainingCoins = totalCoins - Number(this.allGameCharacters[this.activeIndexNumber]
         .price);
-      localStorage.setItem('totalCoins', remainingCoins.toString()!);
+      localStorage.setItem('total-coins', remainingCoins.toString()!);
       savedPlayerData[this.activeIndexNumber].isLocked = false;
       savedPlayerData[this.activeIndexNumber].price = 0;
       this.activateCharacter();
