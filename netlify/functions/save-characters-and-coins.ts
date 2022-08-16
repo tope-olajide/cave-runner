@@ -11,27 +11,27 @@ const handler: Handler = async (event) => {
   }
   const token = event.headers.authorization;
   const params = JSON.parse(event.body!);
-  const { characters }: any = params;
-
-  const user = authenticateToken(token);
-  if (!user) {
-    return { statusCode: 401, body: 'Failed to authenticate token.' };
-  }
+  const { characters, coins }: any = params;
 
   try {
+    const user = authenticateToken(token);
+    if (!user) {
+      return { statusCode: 401, body: 'Failed to authenticate token.' };
+    }
     const connection = await mysql.createConnection(process.env.DATABASE_URL);
     const { id } = user;
     const [rows] = await connection.execute(
-      'UPDATE players SET characters = ? WHERE id = ?',
-      [characters, id],
+      'UPDATE players SET characters = ?, coins = ? WHERE id = ?',
+      [characters, coins, id],
     );
     return {
       statusCode: 200,
       body: JSON.stringify(rows),
-      message: 'characters Saved Successfully!',
+      message: 'Coins Saved Successfully!',
+
     };
   } catch (error) {
-    return { statusCode: 500, body: String(error), message: 'unable to save characters' };
+    return { statusCode: 500, body: String(error), message: 'unable to save coins' };
   }
 };
 

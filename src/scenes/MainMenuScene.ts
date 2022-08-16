@@ -84,7 +84,7 @@ export default class MainMenuScene extends Scene {
       .loadAsync(this.allGameCharacters[0].danceAnimation);
 
     (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '34%';
-    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 37;
+    (document.querySelector('#loading-bar') as HTMLProgressElement).value = 34;
 
     this.jolleenAnimation = await this.fbxLoader
       .loadAsync(this.allGameCharacters[1].danceAnimation);
@@ -96,7 +96,7 @@ export default class MainMenuScene extends Scene {
 
     (document.querySelector('.loading-percentage') as HTMLInputElement).innerHTML = '42%';
     (document.querySelector('#loading-bar') as HTMLProgressElement).value = 42;
-    
+
     this.xbot.visible = false;
     this.jolleen.visible = false;
     this.peasantGirl.visible = false;
@@ -137,7 +137,66 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('#sign-in-modal') as HTMLInputElement).style.display = 'block';
   }
 
-  private async SignInUser() {
+  private restoreOnlineBackup(scores:number, coins:number, characters:string) {
+    localStorage.setItem('high-score', String(scores));
+    localStorage.setItem('total-coins', String(coins));
+    localStorage.setItem('allGameCharacters', characters);
+    this.allGameCharacters = (JSON.parse(localStorage.getItem('allGameCharacters')!));
+    (document.querySelector('#backup-modal') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('.high-score') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('high-score')!);
+    (document.querySelector('.total-coins') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('total-coins')!);
+  }
+
+  private async overwriteOnlineBackup() {
+    const scores = (JSON.parse(localStorage.getItem('high-score')!));
+    const coins = (JSON.parse(localStorage.getItem('total-coins')!));
+    const characters = JSON.stringify(this.allGameCharacters);
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        (document.querySelector('#overwrite-online-backup-btn') as HTMLInputElement).disabled = true;
+        (document.querySelector('#restore-online-backup-btn') as HTMLInputElement).disabled = true;
+        (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'block';
+        const response = await fetch('/.netlify/functions/overwrite-game-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: token,
+          },
+          body: JSON.stringify({ scores, coins, characters }),
+        });
+        (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
+        (document.querySelector('#backup-modal') as HTMLInputElement).style.display = 'none';
+        (document.querySelector('.high-score') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('high-score')!);
+        (document.querySelector('.total-coins') as HTMLInputElement).innerHTML = JSON.parse(localStorage.getItem('total-coins')!);
+        (document.querySelector('#overwrite-online-backup-btn') as HTMLInputElement).disabled = false;
+        (document.querySelector('#restore-online-backup-btn') as HTMLInputElement).disabled = false;
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          if (response.status === 401) {
+            Toastify({
+              text: 'Your session has expired. Please relogin',
+              duration: 5000,
+              close: true,
+              gravity: 'bottom',
+              position: 'center',
+              stopOnFocus: true,
+            }).showToast();
+            (document.querySelector('#overwrite-online-backup-btn') as HTMLInputElement).disabled = false;
+            (document.querySelector('#restore-online-backup-btn') as HTMLInputElement).disabled = false;
+          }
+        }
+      } catch (error) {
+        (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
+        (document.querySelector('#backup-modal') as HTMLInputElement).style.display = 'none';
+        (document.querySelector('#overwrite-online-backup-btn') as HTMLInputElement).disabled = false;
+        (document.querySelector('#restore-online-backup-btn') as HTMLInputElement).disabled = false;
+      }
+    }
+  }
+
+  private async signInUser() {
     const username = (document.getElementById('signin-username-text') as HTMLInputElement).value;
     const password = (document.getElementById('signin-password-text') as HTMLInputElement).value;
     const loginData = { username, password };
@@ -153,25 +212,39 @@ export default class MainMenuScene extends Scene {
         body: JSON.stringify(loginData),
       });
 
-      const { token, message } = await response.json();
+      const {
+        token, message, scores, coins, characters,
+      } = await response.json();
       (document.querySelector('#login-button') as HTMLInputElement).innerHTML = 'Login';
       (document.querySelector('#login-button') as HTMLInputElement).disabled = false;
+
+
       if (token) {
         localStorage.setItem('token', token);
+        localStorage.setItem('username', username);
         this.closeSignInForm();
         this.loadLoginScreen();
         Toastify({
           text: `Welcome Back, ${username}`,
-          duration: 7000,
+          duration: 4000,
           close: true,
           gravity: 'bottom',
           position: 'center',
           stopOnFocus: true,
         }).showToast();
+        if (scores !== Number(JSON.parse(localStorage.getItem('high-score')!))
+        || coins !== Number(JSON.parse(localStorage.getItem('total-coins')!))
+           || characters !== JSON.stringify(this.allGameCharacters)) {
+          (document.querySelector('#backup-modal') as HTMLInputElement).style.display = 'block';
+        }
+        (document.querySelector('#restore-online-backup-btn') as HTMLInputElement).onclick = () => {
+          this.restoreOnlineBackup(scores, coins, characters);
+        };
+ 
       } else {
         Toastify({
           text: `${message}`,
-          duration: 7000,
+          duration: 4000,
           close: true,
           gravity: 'bottom',
           position: 'center',
@@ -198,8 +271,9 @@ export default class MainMenuScene extends Scene {
     const password = (document.getElementById('signup-password-text') as HTMLInputElement).value;
     const repeatPassword = (document.getElementById('signup-repeat-password-text') as HTMLInputElement).value;
     const country = (document.getElementById('country') as HTMLInputElement).value;
+    const characters = JSON.stringify(this.allGameCharacters);
     const signUpData = {
-      username, password, country,
+      username, password, country, characters,
     };
     if (username.length < 4) {
       Toastify({
@@ -210,8 +284,7 @@ export default class MainMenuScene extends Scene {
         position: 'center',
         stopOnFocus: true,
       }).showToast();
-    }
-    if (password.length < 5) {
+    } else if (password.length < 5) {
       Toastify({
         text: '❎ Password is too short!',
         duration: 3000,
@@ -220,8 +293,7 @@ export default class MainMenuScene extends Scene {
         position: 'center',
         stopOnFocus: true,
       }).showToast();
-    }
-    if (password !== repeatPassword) {
+    } else if (password !== repeatPassword) {
       Toastify({
         text: '❎ Password does not match!',
         duration: 3000,
@@ -230,54 +302,56 @@ export default class MainMenuScene extends Scene {
         position: 'center',
         stopOnFocus: true,
       }).showToast();
-    }
-    try {
-      (document.querySelector('#register-button') as HTMLInputElement).innerHTML = 'Signing you up...';
-      (document.querySelector('#register-button') as HTMLInputElement).disabled = true;
-      const response = await fetch('/.netlify/functions/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(signUpData),
-      });
-      const { token, message } = await response.json();
-      (document.querySelector('#register-button') as HTMLInputElement).innerHTML = 'Register';
-      (document.querySelector('#register-button') as HTMLInputElement).disabled = false;
+    } else {
+      try {
+        (document.querySelector('#register-button') as HTMLInputElement).innerHTML = 'Signing you up...';
+        (document.querySelector('#register-button') as HTMLInputElement).disabled = true;
+        const response = await fetch('/.netlify/functions/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(signUpData),
+        });
+        const { token, message } = await response.json();
+        (document.querySelector('#register-button') as HTMLInputElement).innerHTML = 'Register';
+        (document.querySelector('#register-button') as HTMLInputElement).disabled = false;
 
-      if (token) {
-        localStorage.setItem('token', token);
-        this.closeSignUpForm();
-        this.loadLoginScreen();
+        if (token) {
+          localStorage.setItem('token', token);
+          localStorage.setItem('username', username);
+          this.closeSignUpForm();
+          this.loadLoginScreen();
+          Toastify({
+            text: 'Registration Successful!',
+            duration: 4000,
+            close: true,
+            gravity: 'bottom',
+            position: 'center',
+            stopOnFocus: true,
+          }).showToast();
+        } else {
+          Toastify({
+            text: `${message}`,
+            duration: 4000,
+            close: true,
+            gravity: 'bottom',
+            position: 'center',
+            stopOnFocus: true,
+          }).showToast();
+        }
+      } catch (error) {
         Toastify({
-          text: 'Registration Successful!',
-          duration: 4000,
+          text: `❎❎❎ ${error}`,
+          duration: 3000,
           close: true,
           gravity: 'bottom',
           position: 'center',
           stopOnFocus: true,
         }).showToast();
-      } else {
-        Toastify({
-          text: `${message}`,
-          duration: 4000,
-          close: true,
-          gravity: 'bottom',
-          position: 'center',
-          stopOnFocus: true,
-        }).showToast();
+        (document.querySelector('#register-button') as HTMLInputElement).innerHTML = 'Signing you up...';
+        (document.querySelector('#register-button') as HTMLInputElement).disabled = false;
       }
-    } catch (error) {
-      Toastify({
-        text: `❎❎❎ ${error}`,
-        duration: 3000,
-        close: true,
-        gravity: 'bottom',
-        position: 'center',
-        stopOnFocus: true,
-      }).showToast();
-      (document.querySelector('#register-button') as HTMLInputElement).innerHTML = 'Signing you up...';
-      (document.querySelector('#register-button') as HTMLInputElement).disabled = false;
     }
   }
 
@@ -291,11 +365,14 @@ export default class MainMenuScene extends Scene {
 
   private loadLoginScreen() {
     (document.querySelector('#sign-out-button') as HTMLInputElement).style.display = 'block';
+    (document.querySelector('#greetings') as HTMLInputElement).style.display = 'block';
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('#username') as HTMLInputElement).innerHTML = localStorage.getItem('username')!;
   }
 
   private loadLogoutScreen() {
     (document.querySelector('#sign-out-button') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('#greetings') as HTMLInputElement).style.display = 'none';
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'block';
   }
 
@@ -323,11 +400,18 @@ export default class MainMenuScene extends Scene {
 
   async logoutUser() {
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
+
     this.loadLogoutScreen();
   }
 
   initialize() {
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'block';
+
+    (document.querySelector('#overwrite-online-backup-btn') as HTMLInputElement).onclick = () => {
+      this.overwriteOnlineBackup();
+    };
+
     const token = localStorage.getItem('token');
     if (token) {
       this.loadLoginScreen();
@@ -344,6 +428,7 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('.auth-button') as HTMLInputElement).onclick = () => {
       this.displaySignUpForm();
     };
+
     (document.querySelector('#about-button') as HTMLInputElement).onclick = () => {
       this.displayAboutModal();
     };
@@ -355,11 +440,13 @@ export default class MainMenuScene extends Scene {
     if (!this.visible) {
       this.visible = true;
     }
+
     if (!this.clock.running) {
       this.clock.start();
     }
     (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'block';
     this.allGameCharacters = (JSON.parse(localStorage.getItem('allGameCharacters')!));
+
     this.activeIndexNumber = this.allGameCharacters
       .findIndex((character) => character.isActive === true);
 
@@ -399,7 +486,7 @@ export default class MainMenuScene extends Scene {
       this.SignUpUser();
     };
     (document.querySelector('#login-button') as HTMLInputElement).onclick = () => {
-      this.SignInUser();
+      this.signInUser();
     };
   }
 
@@ -420,5 +507,6 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('.auth-button') as HTMLInputElement).style.display = 'none';
     (document.querySelector('#score-board-button') as HTMLInputElement).style.display = 'none';
     (document.querySelector('#sign-out-button') as HTMLInputElement).style.display = 'none';
+    (document.querySelector('#greetings') as HTMLInputElement).style.display = 'none';
   }
 }

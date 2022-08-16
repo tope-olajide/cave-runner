@@ -77,6 +77,7 @@
   <button id="sign-out-button" class="btn">
     <span class="btn-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Sign out
   </button>
+  <h3 id="greetings">Hello, <span id="username"></span> 😉<!-- 😊 --></h3>
   <button id="score-board-button" class="btn">
     <span class="btn-icon"><i class="fa-solid fa-crown"></i></span> High Scores
   </button>
@@ -438,6 +439,20 @@
         <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
         Close
       </button>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  <div id="backup-modal" class="modal">
+    <div class="modal-body">
+      <div class="backup-content">
+        <h2>Game Data Conflicts</h2>
+        <p>We observed that your backed up game data is not the same as the data on your device. </p>
+        <p>What do you want to do?</p>
+      <button class="btn" id="restore-online-backup-btn"> Restore my online backup and overwrite my local data.</button>
+      <button class="btn" id="overwrite-online-backup-btn"> Overwrite my online backup with the game data saved on this device</button>
       </div>
       
     </div>
