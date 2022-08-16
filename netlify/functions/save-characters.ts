@@ -29,7 +29,6 @@ const handler: Handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify(rows),
       message: 'characters Saved Successfully!',
-
     };
   } catch (error) {
     return { statusCode: 500, body: String(error), message: 'unable to save characters' };

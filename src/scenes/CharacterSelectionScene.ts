@@ -4,6 +4,8 @@ import {
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
+import Toastify from 'toastify-js';
+
 import allCharacters from '../allCharacters';
 
 import { IallGameCharacters } from '../types';
@@ -145,7 +147,7 @@ export default class CharacterSelectionScene extends Scene {
     }
   }
 
-  activateCharacter() {
+  async activateCharacter() {
     const savedPlayerData:IallGameCharacters[] = JSON.parse(localStorage.getItem('allGameCharacters')!);
     const updatedPlayerData = savedPlayerData.map((playerInfo, index: number) => {
       if (this.activeIndexNumber === index) {
@@ -158,17 +160,44 @@ export default class CharacterSelectionScene extends Scene {
     localStorage.setItem('allGameCharacters', JSON.stringify(updatedPlayerData));
     this.allGameCharacters = updatedPlayerData;
 
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'block';
+        const response = await fetch('/.netlify/functions/save-characters-and-coins', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: token,
+          },
+          body: JSON.stringify({ characters: JSON.stringify(updatedPlayerData), coins: Number(localStorage.getItem('total-coins')) }),
+        });
+        (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          if (response.status === 401) {
+            Toastify({
+              text: 'Your session has expired. Please relogin',
+              duration: 5000,
+              close: true,
+              gravity: 'bottom',
+              position: 'center',
+              stopOnFocus: true,
+            }).showToast();
+          }
+        }
+      } catch (error) {
+        (document.querySelector('.auto-save-loader') as HTMLInputElement).style.display = 'none';
+      }
+    }
   }
 
   purchaseCharacter() {
-    const savedPlayerData = JSON.parse(localStorage.getItem('allGameCharacters')!);
     const totalCoins = Number(localStorage.getItem('total-coins'));
     if (totalCoins >= this.allGameCharacters[this.activeIndexNumber].price) {
       const remainingCoins = totalCoins - Number(this.allGameCharacters[this.activeIndexNumber]
         .price);
       localStorage.setItem('total-coins', remainingCoins.toString()!);
-      savedPlayerData[this.activeIndexNumber].isLocked = false;
-      savedPlayerData[this.activeIndexNumber].price = 0;
       this.activateCharacter();
       (document.querySelector('.total-coins') as HTMLInputElement).innerHTML = `${remainingCoins}`;
     }

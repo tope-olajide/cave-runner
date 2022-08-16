@@ -9,7 +9,9 @@ const handler: Handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
   const params = JSON.parse(event.body!);
-  const { username, password, country }: any = params;
+  const {
+    username, password, country, characters,
+  }: any = params;
   if (!username || username.length < 3) {
     return {
       statusCode: 400, body: 'your username is too short',
@@ -27,6 +29,7 @@ const handler: Handler = async (event) => {
       statusCode: 400, body: 'Please select a valid country',
     };
   }
+
   try {
     const connection = await mysql.createConnection(process.env.DATABASE_URL);
 
@@ -40,12 +43,15 @@ const handler: Handler = async (event) => {
       };
     }
     const encryptedPassword = bcrypt.hashSync(password, 10);
-    const [createdUser] : any = await connection.execute('INSERT INTO players( username, password, country) VALUES (?, ?, ?)', [username.toLowerCase(), encryptedPassword, country]);
+    const [createdUser] : any = await connection.execute(
+      'INSERT INTO players( username, password, country, characters) VALUES (?, ?, ?, ?)',
+      [username.toLowerCase(), encryptedPassword, country, characters],
+    );
     const token = jsonwebtoken.sign(
       {
         id: createdUser.insertId,
         username,
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 730,
       },
       process.env.JWT_SECRET,
     );
