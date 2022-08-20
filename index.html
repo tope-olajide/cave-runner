@@ -74,10 +74,13 @@
       <span class="btn-icon"><i class="fa-solid fa-user-plus"></i></span>
     </button>
   </div>
+
   <button id="sign-out-button" class="btn">
     <span class="btn-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Sign out
   </button>
-  <h3 id="greetings">Hello, <span id="username"></span> 😉<!-- 😊 --></h3>
+
+  <h3 id="greetings">Hello, <span id="username"></span> 😉
+  </h3>
   <button id="score-board-button" class="btn">
     <span class="btn-icon"><i class="fa-solid fa-crown"></i></span> High Scores
   </button>
@@ -385,20 +388,20 @@
           <option value="YE">Yemen</option>
           <option value="ZM">Zambia</option>
           <option value="ZW">Zimbabwe</option>
-      </select>
+        </select>
         <p>Already have an account?<button id="sign-in-button" class="btn"><span class="btn-icon"><i
                 class="fa-solid fa-arrow-right-to-bracket"></i></span> Sign in</button></p>
         <button id="register-button" class="btn">Register</button>
-        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Sign in modal -->
   <div id="sign-in-modal" class="modal">
     <div class="modal-body">
       <div class="form">
         <h2 id="close-signin-form" class="close"><span><i class="fa-solid fa-times"></i></span></h2>
         <h2>Sign In</h2>
-        
         <input id="signin-username-text" type="text" value="username"><br />
         <input id="signin-password-text" type="password" value="password">
         <p>Don't have an account?<button id="sign-up-button" class="btn"><span class="btn-icon"><i
@@ -408,6 +411,7 @@
     </div>
   </div>
 
+  <!-- high-scores modal -->
   <div id="high-scores-modal" class="modal">
     <div class="modal-body">
       <h2 class="close" id="close-highscores-modal"><span><i class="fa-solid fa-times"></i></span></h2>
@@ -418,54 +422,52 @@
           <th>Name</th>
           <th>Scores</th>
           <th>Country</th>
-        </tr>
-        <!-- <h3>
-          <div class="fa-3x">
-         
-          <i class="fas fa-sync fa-spin"></i>
-        </div>
-      </h3> -->
       </table>
     </div>
   </div>
+
+  <!-- About game modal -->
   <div id="about-modal" class="modal">
     <div class="modal-body">
       <div class="about-content">
         <h2>About Cave Runner</h2>
         <p>Cave Runner is an Endless Runner Game built with Threejs, Vite, Netlify and PlanetScale</p>
-        <p>It is my sumbision for the <a href ="https://hashnode.com/n/planetscalehackathon">PlanetScale Hackathon on Hashnode</a> </p>
+        <p>It is my sumbision for the <a href="https://hashnode.com/n/planetscalehackathon">PlanetScale Hackathon on
+            Hashnode</a> </p>
         <p>Code is freely available on <a href="https://github.com/tope-olajide/cave-runner">GitHub</a></p>
-      <button class="btn" id="close-about-btn">
-        <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
-        Close
-      </button>
+        <button class="btn" id="close-about-btn">
+          <span class="btn-icon"><i class="fa-solid fa-times"></i></span>
+          Close
+        </button>
       </div>
-      
     </div>
-    
   </div>
 
+  <!-- Backup game options modal -->
   <div id="backup-modal" class="modal">
     <div class="modal-body">
       <div class="backup-content">
         <h2>Game Data Conflicts</h2>
         <p>We observed that your backed up game data is not the same as the data on your device. </p>
         <p>What do you want to do?</p>
-      <button class="btn" id="restore-online-backup-btn"> Restore my online backup and overwrite my local data.</button>
-      <button class="btn" id="overwrite-online-backup-btn"> Overwrite my online backup with the game data saved on this device</button>
+        <button class="btn" id="restore-online-backup-btn"> Restore my online backup and overwrite my local
+          data.</button>
+        <button class="btn" id="overwrite-online-backup-btn"> Overwrite my online backup with the game data saved on
+          this device</button>
       </div>
-      
     </div>
-    
   </div>
+
+  <!-- Loading game container -->
   <div class="loading-container">
     <label class="loading-text" for="loading-bar">loading</label>
-<span class="loading-percentage">0%</span>
-<progress id="loading-bar" value="0" max="100"> </progress>
-
+    <span class="loading-percentage">0%</span>
+    <progress id="loading-bar" value="0" max="100"> </progress>
   </div>
   <div class="disable-touch"></div>
-<div class="auto-save-loader fa-2x"><i class="fas fa-spinner fa-spin"></i></div>
+  <div class="auto-save-loader fa-2x"><i class="fas fa-spinner fa-spin"></i></div>
+
+  <!-- Game's canvas -->
   <canvas id="app"> </canvas>
 
   <script type="module" src="/src/main.ts"></script>

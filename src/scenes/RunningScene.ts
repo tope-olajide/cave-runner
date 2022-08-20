@@ -800,7 +800,7 @@ export default class RunningScene extends Scene {
   }
 
   /*
-The implementation of handleTouch Method is based on Smmehrab answer on stackoverflow
+This implementation of handleTouch Method is based on Smmehrab answer on stackoverflow
 Link: https://stackoverflow.com/a/62825217
   */
 
