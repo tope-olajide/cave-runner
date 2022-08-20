@@ -218,7 +218,6 @@ export default class MainMenuScene extends Scene {
       (document.querySelector('#login-button') as HTMLInputElement).innerHTML = 'Login';
       (document.querySelector('#login-button') as HTMLInputElement).disabled = false;
 
-
       if (token) {
         localStorage.setItem('token', token);
         localStorage.setItem('username', username);
@@ -240,7 +239,6 @@ export default class MainMenuScene extends Scene {
         (document.querySelector('#restore-online-backup-btn') as HTMLInputElement).onclick = () => {
           this.restoreOnlineBackup(scores, coins, characters);
         };
- 
       } else {
         Toastify({
           text: `${message}`,
@@ -256,7 +254,7 @@ export default class MainMenuScene extends Scene {
       (document.querySelector('#login-button') as HTMLInputElement).disabled = false;
 
       Toastify({
-        text: `❎❎❎ ${error}`,
+        text: '❎❎❎ Unable to login, please try again',
         duration: 3000,
         close: true,
         gravity: 'bottom',
@@ -266,7 +264,7 @@ export default class MainMenuScene extends Scene {
     }
   }
 
-  async SignUpUser() {
+  async signUpUser() {
     const username = (document.getElementById('signup-username-text') as HTMLInputElement).value;
     const password = (document.getElementById('signup-password-text') as HTMLInputElement).value;
     const repeatPassword = (document.getElementById('signup-repeat-password-text') as HTMLInputElement).value;
@@ -342,7 +340,7 @@ export default class MainMenuScene extends Scene {
         }
       } catch (error) {
         Toastify({
-          text: `❎❎❎ ${error}`,
+          text: '❎❎❎Unable to sign you up, please try again.',
           duration: 3000,
           close: true,
           gravity: 'bottom',
@@ -398,7 +396,7 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('#high-scores-modal') as HTMLInputElement).style.display = 'none';
   }
 
-  async logoutUser() {
+  private logoutUser() {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
 
@@ -469,7 +467,6 @@ export default class MainMenuScene extends Scene {
     (document.querySelector('#sign-out-button') as HTMLInputElement).onclick = () => {
       this.logoutUser();
     };
-
     (document.querySelector('#sign-in-button') as HTMLInputElement).onclick = () => {
       this.displaySignInForm();
     };
@@ -483,7 +480,7 @@ export default class MainMenuScene extends Scene {
       this.closeHighScoreModal();
     };
     (document.querySelector('#register-button') as HTMLInputElement).onclick = () => {
-      this.SignUpUser();
+      this.signUpUser();
     };
     (document.querySelector('#login-button') as HTMLInputElement).onclick = () => {
       this.signInUser();
