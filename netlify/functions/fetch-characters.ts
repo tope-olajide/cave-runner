@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions';
 import mysql from 'mysql2/promise';
-import authenticateToken from './authenticateToken';
+import authenticateToken from '../utils/authenticateToken';
 
 require('dotenv').config();
 

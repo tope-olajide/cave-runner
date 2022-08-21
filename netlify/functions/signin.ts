@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions';
 import mysql from 'mysql2/promise';
-// import querystring from 'querystring';
+
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 

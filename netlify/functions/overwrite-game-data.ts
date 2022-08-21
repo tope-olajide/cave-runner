@@ -1,8 +1,6 @@
 import { Handler } from '@netlify/functions';
 import mysql from 'mysql2/promise';
-// import querystring from 'querystring';
-import authenticateToken from './authenticateToken';
-
+import authenticateToken from '../utils/authenticateToken';
 
 const handler: Handler = async (event) => {
   if (event.httpMethod !== 'POST') {
